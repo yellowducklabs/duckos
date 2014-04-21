@@ -4,9 +4,14 @@ body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: 'Lato', sans-serif, helvetica;
 }
 
+h2 {
+  font-weight: 300;
+}
+
 // Bootstrap overrides
 .navbar {
-  background-color: #7109aa;
+  // background-color: #7109aa;
+  background-color: #4A2C5A;
   opacity: 0.90;
   padding: 50px 0;
   .sidebar-toggle {
@@ -14,10 +19,16 @@ body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     padding: 15px;
     cursor: pointer;
   }
+  margin-bottom: 0px;
+  border-bottom: 0;
 }
 
 .container {
   max-width: 800px;
+}
+
+pre {
+  background-color: #E1FABC;
 }
 
 .pre-left {
@@ -35,6 +46,10 @@ body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     font-weight: normal;
     font-size: 16px;
   }
+  background-image: url('../img/duck-logo.png');
+  background-repeat: no-repeat;
+  background-size: 70px;
+  padding-left: 100px
 }
 
 .elem-center {
@@ -49,5 +64,58 @@ body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 .soon {
-  color: #ccc;
+  // color: #ccc;
+  opacity: 0.6;
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.processor {
+  opacity: 0.8;
+  &:hover {
+    opacity: 1;
+  }
+  background-image: url('../img/processor.png');
+  background-repeat: no-repeat;
+  background-size: 124px;
+  display: block !important;
+  height: 160px;
+  width: 160px;
+  background-position-x: center;
+  background-position-y: center;
+  .processor-label {
+    padding-top: 68px;
+    font-size: larger;
+    font-weight: 400;
+  }
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.languages {
+  font-size: larger;
+  .label {
+    font-weight: 400;
+  }
+}
+
+.section {
+  padding-bottom: 20px;
+  &.section-intro {
+    background-color: #A164C0;
+  }
+  &.section-install {
+    background-color: #C9CE56;
+  }
+}
+
+.rpi {
+  background-image: url('../img/rpi');
+  background-repeat: no-repeat;
+  background-size: 270px;
+  display: block !important;
+  height: 200px;
+  // float: left;
+  // width: 160px;
 }

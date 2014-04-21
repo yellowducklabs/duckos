@@ -16,7 +16,7 @@
   <script language='javascript' type='text/javascript' src="lib/bootstrap.min.js"></script>
   <script language='javascript' type='text/javascript' src="script.js"></script>
 
-  <title>DuckOS - A tiny (~20mb) OS for heroku-like code deployments</title>
+  <title>DuckOS - A tiny (~20mb) PaaS</title>
 </head>
 
 <body>
@@ -25,65 +25,86 @@
   <div class="navbar navbar-default navbar-static-top " role="navigation">
     <div class="container logo">
       <h1>DuckOS</h1>
-      <h2>A tiny (~20mb) OS<br/> for heroku-like code deployments</h2>
+      <h2>A tiny (~20mb) PaaS</h2>
     </div>
   </div>
   <!-- END HEADER -->
 
 
   <!-- PAGE WRAPPER -->
-  <div class="container page-wrapper">
-    <div class="row">
-      <div class="col-md-12">
+  <div class="container-fluid section section-intro">
+    <div class="container">
+      <div class="row">
         <h2>Builds</h2>
+        <div class="col-md-3">
+          <span class='label label-success processor'><p class='processor-label'>ARM11<br /> (ARMv6)</p></span>
+        </div>
+        <div class="col-md-3 soon">
+          <span class='label label-default processor' data-toggle='tooltip' data-placement="bottom" title='Coming soon'><p class='processor-label'>i386<br />(32-bit)</p></span>
+        </div>
+        <div class="col-md-3 soon">
+          <span class='label label-default processor' data-toggle='tooltip' data-placement="bottom" title='Coming soon'><p class='processor-label'>amd64<br />(64-bit)</p></span>
+        </div>
+        <div class="col-md-3 soon">
+          <span class='label label-default processor' data-toggle='tooltip' data-placement="bottom" title='Coming soon'><p class='processor-label'>PowerPC</p></span>
+        </div>
+      </div>
 
-        <p>
-          <span class='label label-success'>RaspberryPi (armv6)</span>
-          <span class='label label-default' data-toggle='tooltip' data-placement="bottom" title='Coming soon'>i386 (32-bit)</span>
-          <span class='label label-default' data-toggle='tooltip' data-placement="bottom" title='Coming soon'>amd64 (64-bit)</span>
-        </p>
+      <div class="row">
         <h2>Languages</h2>
-        <p>
-          <span class='label label-success'>Node.js</span>
-          <span class='label label-default' data-toggle='tooltip' data-placement="bottom" title='Coming soon'>Python</span>
-          <span class='label label-default' data-toggle='tooltip' data-placement="bottom" title='Coming soon'>Ruby</span>
-          <span class='label label-default' data-toggle='tooltip' data-placement="bottom" title='Coming soon'>PHP</span>
-        </p>
+        <div class="col-md-12">
+          <p class='languages'>
+            <span class='label label-success'>Node.js</span>
+            <span class='label label-default' data-toggle='tooltip' data-placement="bottom" title='Coming soon'>Python</span>
+            <span class='label label-default' data-toggle='tooltip' data-placement="bottom" title='Coming soon'>Ruby</span>
+            <span class='label label-default' data-toggle='tooltip' data-placement="bottom" title='Coming soon'>PHP</span>
+            <span class='label label-default' data-toggle='tooltip' data-placement="bottom" title='Coming soon'>Perl</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <div class="container-fluid section section-install">
+    <div class="container">
+      <div class="row">
         <h2>Install</h2>
-        <p>
-          Run the following in a terminal
-          <p><code>curl duckos.io/install | sh</code></p>
-        </p>
-
-
+        <div class="col-md-12">
+          <p>
+            Run the following in a terminal
+            <p><kbd>curl duckos.io/install | sh</kbd></p>
+          </p>
+        </div>
+      </div>
+      <div class="row">
         <h2>Build</h2>
-        <p>
-          Insert an SD card on host and run <code>duck build</code>
-
+        <div class="col-md-12">
+          <p>
+            Insert an SD card on host and run <kbd>duck build</kbd>
 <pre>
 ---> Downloading DuckOS...
 Select disk device (data will be destroyed): /dev/disk2
 ---> Writing partitions...
 ---> Installing files...
 Configure root password (duckos):
-===> DuckOS install complete!
-</pre>
-
-        </p>
-
-
+===> DuckOS install complete!</pre>
+          </p>
+        </div>
+      </div>
+      <div class="row">
         <h2>Find</h2>
-
-        <p>Insert SD into Pi, connect network cable and turn on. After a few seconds run <code>duck find</code></p>
-
-
-
+        <div class="col-md-12">
+          <p>Insert SD into Pi, connect network cable and turn on.</p>
+          <span class='rpi'></span>
+          <p> After a few seconds run <kbd>duck find</kbd></p>
 <pre>
 ---> Searching for DuckOS hosts...
 10.0.1.15 (raspberrypi)</pre>
-
-<h2>Deploy</h2>
+        </div>
+      </div>
+      <div class="row">
+        <h2>Deploy</h2>
+        <div class="col-md-12">
 <pre>
 $ echo 'Hello world!' > app.js
 $ git init; git add app.js
@@ -91,9 +112,8 @@ $ git commit -m "First release"
 $ git push duck@10.0.1.15 master
 ---> Node.js app detected...
 ===> Application deployed
-     http://10.0.1.15</pre>
-
-
+http://10.0.1.15</pre>
+        </div>
       </div>
     </div>
   </div>
