@@ -28,76 +28,43 @@ case "$1" in
     # read -r -p "Select disk device (data will be destroyed): " disk_device
     disk_device=/dev/disk2
 
-    sudo diskutil unmountDisk $disk_device
-
     # ensure our device is unmounted
-    # for disk in `ls -1 $disk_device*` ; do
-    #   echo "unmounting $disk"
-    #   sudo diskutil unmount $disk
-    # done
+    # @ISSUE OS X only
+    sudo diskutil unmountDisk $disk_device
 
     echo "---> Writing DuckOS to $disk_device..."
 
     # write disk image to device
-    gunzip -c $duckos_img | sudo dd of=$disk_device
-    # (gunzip -c $duckos_img | sudo dd of=$disk_device &)
-
-    # sleep 1;
-
-    # pid=`pgrep -l dd | grep '\sdd$' | cut -d' ' -f1`
-
-    # echo $pid;
-
-
-    # # If this script is killed, kill the 'dd'.
-    # trap "kill $pid 2> /dev/null" EXIT
-
-    # echo "pid is $pid"
-
-    # # # While copy is running...
-    # while kill -0 $pid 2> /dev/null; do
-    #   echo "---> Writing DuckOS to $disk_device..."
-    # #   # kill -USR1 $pid
-    #   sleep 1
-    # done
-
-    # # # # Disable the trap on a normal exit.
-    # trap - EXIT
-
-    # Configure root password (duckos):
-    # @TODO
-
-    # sudo diskutil mountDisk $disk_device
+    ./bar -c 'gunzip -c -' $duckos_img | sudo dd of=$disk_device
 
     echo "===> DuckOS install complete!"
 
     ;;
 
+  find)
+    # ---> Searching for DuckOS hosts...
+    # 10.0.1.15 (raspberrypi)
+    ;;
+
   help)
     cat<<EOF
-    build           Build DuckOS onto a mounted SD Card / USB Drive
-    help            Print the list of commands
+    write           Writes DuckOS onto a present SD Card / USB Drive
+    find            Searches for DuckOS hosts on the current network
+    help            Prints the list of commands
 EOF
     ;;
 
   *)
-    for script in $(ls -d /var/lib/dokku/plugins/*/commands); do
-      $script "$@"
-    done
+    # @TODO bind any other commmands as passthrough?
+    #
+    # $ echo 'Hello world!' > app.js
+    # $ git init; git add app.js
+    # $ git commit -m "First release"
+    # $ git push duck@10.0.1.15 master
+    # ---> Node.js app detected...
+    # ===> Application deployed
+    #      http://10.0.1.15
     ;;
 
 esac
 
-
-
-# ---> Searching for DuckOS hosts...
-# 10.0.1.15 (raspberrypi)
-
-
-# $ echo 'Hello world!' > app.js
-# $ git init; git add app.js
-# $ git commit -m "First release"
-# $ git push duck@10.0.1.15 master
-# ---> Node.js app detected...
-# ===> Application deployed
-#      http://10.0.1.15
