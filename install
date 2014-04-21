@@ -1,5 +1,9 @@
+#!/usr/bin/env bash
 
 # curl duckos.io/install | sh
-# wget --no-check-certificate http://mario.net.au/f/server.sh -O - | sh
+# wget duckos.io/install -O - | sh
 
-echo '-----> Downloading DuckOS'
+# duck_source="https://raw.github.com/supermario/duck/master/duck"
+duck_source="http://localhost/duckos/site/duck"
+
+curl $duck_source -o /usr/local/bin/dokku
