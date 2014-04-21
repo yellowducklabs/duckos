@@ -52,33 +52,39 @@
 
         <h2>Install</h2>
         <p>
-          Insert an SD card on host and run
+          Run the following in a terminal
           <p><code>curl duckos.io/install | sh</code></p>
+        </p>
 
-<div class='elem-center'><pre class='pre-left'>
----> Installing duck to /usr/local/bin/duck
+
+        <h2>Build</h2>
+        <p>
+          Insert an SD card on host and run <code>duck build</code>
+
+<pre>
 ---> Downloading DuckOS...
-Configure root password (duckos):
 Select disk device (data will be destroyed): /dev/disk2
 ---> Writing partitions...
 ---> Installing files...
+Configure root password (duckos):
 ===> DuckOS install complete!
 </pre>
-</div>
 
         </p>
-        <div class='clearfix'></div>
-        <h2>Deploy</h2>
 
-        <p>
-         Insert SD into Pi, connect network cable. Allow 5-10 seconds for device to boot.
-<div class='elem-center'>
-<pre class='pre-left'>
-$ duck list
+
+        <h2>Find</h2>
+
+        <p>Insert SD into Pi, connect network cable and turn on. After a few seconds run <code>duck find</code></p>
+
+
+
+<pre>
+---> Searching for DuckOS hosts...
 10.0.1.15 (raspberrypi)</pre>
-</div>
-<p style='clear:both;'>Deploy an application</p>
-<div class='elem-center'><pre class='pre-left'>
+
+<h2>Deploy</h2>
+<pre>
 $ echo 'Hello world!' > app.js
 $ git init; git add app.js
 $ git commit -m "First release"
@@ -86,10 +92,8 @@ $ git push duck@10.0.1.15 master
 ---> Node.js app detected...
 ===> Application deployed
      http://10.0.1.15</pre>
-</div>
 
 
-        </p>
       </div>
     </div>
   </div>
