@@ -1,0 +1,53 @@
+@import url('http://fonts.googleapis.com/css?family=Lato:400,300,700,900');
+
+body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: 'Lato', sans-serif, helvetica;
+}
+
+// Bootstrap overrides
+.navbar {
+  background-color: #7109aa;
+  opacity: 0.90;
+  padding: 50px 0;
+  .sidebar-toggle {
+    font-size: 150% !important;
+    padding: 15px;
+    cursor: pointer;
+  }
+}
+
+.container {
+  max-width: 800px;
+}
+
+.pre-left {
+  text-align: left;
+}
+// END Bootstrap overrides
+
+.logo {
+  h1 {
+    color: #fff;
+    margin-top: 5px;
+  }
+  h2 {
+    color: #fff;
+    font-weight: normal;
+    font-size: 16px;
+  }
+}
+
+.elem-center {
+  float: left;
+  position: relative;
+  left: 50%;
+  & > pre {
+    position: relative;
+    left: -50%;
+  }
+  clear: both;
+}
+
+.soon {
+  color: #ccc;
+}

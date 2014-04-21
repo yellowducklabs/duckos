@@ -1,0 +1,5 @@
+
+# curl duckos.io/install | sh
+# wget --no-check-certificate http://mario.net.au/f/server.sh -O - | sh
+
+echo '-----> Downloading DuckOS'

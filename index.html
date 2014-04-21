@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no' charset="UTF-8">
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="lib/bootstrap.min.css">
+
+  <!-- Styles -->
+  <link rel='stylesheet/less' type='text/css' href='css/styles.css.less'/>
+
+  <!-- JS Libs -->
+  <script language='javascript' type='text/javascript' src="lib/jquery.js"></script>
+  <script language='javascript' type='text/javascript' src='lib/less.min.js'></script>
+  <!-- Latest compiled and minified Bootstrap JavaScript -->
+  <script language='javascript' type='text/javascript' src="lib/bootstrap.min.js"></script>
+  <script language='javascript' type='text/javascript' src="script.js"></script>
+
+  <title>DuckOS - A tiny (~20mb) OS for heroku-like code deployments</title>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <div class="navbar navbar-default navbar-static-top " role="navigation">
+    <div class="container logo">
+      <h1>DuckOS</h1>
+      <h2>A tiny (~20mb) OS<br/> for heroku-like code deployments</h2>
+    </div>
+  </div>
+  <!-- END HEADER -->
+
+
+  <!-- PAGE WRAPPER -->
+  <div class="container page-wrapper">
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Builds</h2>
+
+        <p>
+          <span class='label label-success'>RaspberryPi (armv6)</span>
+          <span class='label label-default' data-toggle='tooltip' data-placement="bottom" title='Coming soon'>i386 (32-bit)</span>
+          <span class='label label-default' data-toggle='tooltip' data-placement="bottom" title='Coming soon'>amd64 (64-bit)</span>
+        </p>
+        <h2>Languages</h2>
+        <p>
+          <span class='label label-success'>Node.js</span>
+          <span class='label label-default' data-toggle='tooltip' data-placement="bottom" title='Coming soon'>Python</span>
+          <span class='label label-default' data-toggle='tooltip' data-placement="bottom" title='Coming soon'>Ruby</span>
+          <span class='label label-default' data-toggle='tooltip' data-placement="bottom" title='Coming soon'>PHP</span>
+        </p>
+
+        <h2>Install</h2>
+        <p>
+          Insert an SD card on host and run
+          <p><code>curl duckos.io/install | sh</code></p>
+
+<div class='elem-center'><pre class='pre-left'>
+---> Installing duck to /usr/local/bin/duck
+---> Downloading DuckOS...
+Configure root password (duckos):
+Select disk device (data will be destroyed): /dev/disk2
+---> Writing partitions...
+---> Installing files...
+===> DuckOS install complete!
+</pre>
+</div>
+
+        </p>
+        <div class='clearfix'></div>
+        <h2>Deploy</h2>
+
+        <p>
+         Insert SD into Pi, connect network cable. Allow 5-10 seconds for device to boot.
+<div class='elem-center'>
+<pre class='pre-left'>
+$ duck list
+10.0.1.15 (raspberrypi)</pre>
+</div>
+<p style='clear:both;'>Deploy an application</p>
+<div class='elem-center'><pre class='pre-left'>
+$ echo 'Hello world!' > app.js
+$ git init; git add app.js
+$ git commit -m "First release"
+$ git push duck@10.0.1.15 master
+---> Node.js app detected...
+===> Application deployed
+     http://10.0.1.15</pre>
+</div>
+
+
+        </p>
+      </div>
+    </div>
+  </div>
+  <!-- END PAGE WRAPPER -->
+
+</body>
+
+</html>
