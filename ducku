@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+set -eo pipefail;
+
+export DUCKU_ROOT=${DUCKU_ROOT:="$HOME"}
+
+[[ $DUCKU_TRACE ]] && set -x
+
+git_archive_all() {
+  APP=$1; REV=$2
+  TMP_WORK_DIR=$(mktemp -d)
+  chmod 755 $TMP_WORK_DIR
+  unset GIT_DIR GIT_WORK_TREE
+  git clone $DUCKU_ROOT/$APP $TMP_WORK_DIR > /dev/null 2>&1
+  pushd $TMP_WORK_DIR > /dev/null
+  git config advice.detachedHead false
+  git checkout $REV > /dev/null 2>&1
+  git submodule update --init --recursive > /dev/null
+  find -name .git -prune -exec rm -rf {} \; > /dev/null
+  tar c .
+  popd > /dev/null
+  rm -rf $TMP_WORK_DIR > /dev/null
+}
+
+case "$1" in
+  receive)
+    APP="$2";
+    echo "---> Building $APP ..."
+    cat | $DUCKU_ROOT/ducku build $APP
+    echo "---> Deploying $APP ..."
+    $DUCKU_ROOT/ducku deploy $APP
+    echo "---> Application deployed:"
+    echo
+    ;;
+
+  build)
+    APP="$2";
+    DUCKU_RUN=$DUCKU_ROOT/run
+    rm -rf $DUCKU_RUN && mkdir $DUCKU_RUN
+    cat | tar -xC $DUCKU_ROOT/run
+    ;;
+
+  deploy)
+    nohup node $DUCKU_ROOT/run/app.js &
+    ;;
+
+  git-hook)
+    APP=$2
+
+    while read oldrev newrev refname
+    do
+      # Only run this script for the master branch. You can remove this
+      # if block if you wish to run it for others as well.
+      if [[ $refname = "refs/heads/master" ]] ; then
+        git_archive_all $APP $newrev | $DUCKU_ROOT/ducku receive $APP | sed -u "s/^/"$'\e[1G'"/"
+      else
+        echo $'\e[1G\e[K'"-----> WARNING: deploy did not complete, you must push to master."
+        echo $'\e[1G\e[K'"-----> for example, try 'git push <duck> ${refname/refs\/heads\/}:master'"
+      fi
+
+    done
+    ;;
+
+  git-*)
+
+    APP="$(echo $2 | perl -pe 's/(?<!\\)'\''//g' | sed 's/\\'\''/'\''/g')"
+
+    # Would be nicer to put the checkout in ~/repos or something
+    # but have banged my head against getting git-receive-pack to
+    # honour any changes to the push path for way too long
+    APP_PATH=$DUCKU_ROOT/$APP
+
+    if [[ $1 == "git-receive-pack" && ! -d "$APP_PATH/refs" ]]; then
+      git init --bare $APP_PATH > /dev/null
+      PRERECEIVE_HOOK="$APP_PATH/hooks/pre-receive"
+      cat > $PRERECEIVE_HOOK <<EOF
+#!/usr/bin/env bash
+set -e; set -o pipefail;
+cat | $DUCKU_ROOT/ducku git-hook $APP
+EOF
+      chmod +x $PRERECEIVE_HOOK
+    fi
+
+    args=$@
+    git-shell -c "$args"
+    ;;
+
+  help)
+    cat
+    ;;
+esac
+
+# Provide a shell if no other commands match
+/bin/bash
