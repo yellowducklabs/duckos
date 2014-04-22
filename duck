@@ -17,7 +17,7 @@ duckos_latest="http://localhost/duckos/duckos-rpi.img.gz"
 duckos_img=$duck_tmp/duckos-rpi.img.gz
 
 case "$1" in
-  build)
+  write)
     # Ensure we have a copy of duckos
     if [[ -f $duckos_img ]]
       then echo "---> Using $duckos_img"
@@ -25,12 +25,12 @@ case "$1" in
         curl $duckos_latest -o $duckos_img
     fi
 
-    # read -r -p "Select disk device (data will be destroyed): " disk_device
-    disk_device=/dev/disk2
+    read -r -p "Select disk device (data will be destroyed): " disk_device
 
     # ensure our device is unmounted
-    # @ISSUE OS X only
-    sudo diskutil unmountDisk $disk_device
+    for filesystem in `ls -1 $disk_device?*`; do
+        sudo umount -f $filesystem
+    done
 
     echo "---> Writing DuckOS to $disk_device..."
 
