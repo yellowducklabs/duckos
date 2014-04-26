@@ -2,6 +2,7 @@
 set -eo pipefail;
 
 export DUCKU_ROOT=${DUCKU_ROOT:="$HOME"}
+export DUCKU=${DUCKU:="/home/mario/duck/ducku"}
 
 [[ $DUCKU_TRACE ]] && set -x
 
@@ -25,11 +26,12 @@ case "$1" in
   receive)
     APP="$2";
     echo "---> Building $APP ..."
-    cat | $DUCKU_ROOT/ducku build $APP
+    cat | $DUCKU build $APP
     echo "---> Deploying $APP ..."
-    $DUCKU_ROOT/ducku deploy $APP
-    echo "---> Application deployed:"
+    $DUCKU deploy $APP
+    echo "---> Application deployed"
     echo
+    exit
     ;;
 
   build)
@@ -40,7 +42,9 @@ case "$1" in
     ;;
 
   deploy)
-    nohup node $DUCKU_ROOT/run/app.js &
+    # Node binds both input/output which hangs the deploy unless we redirect output/input
+    nohup /home/mario/node/bin/node $DUCKU_ROOT/run/app.js >$DUCKU_ROOT/run.log 2>&1 </dev/null &
+    exit
     ;;
 
   git-hook)
@@ -51,7 +55,7 @@ case "$1" in
       # Only run this script for the master branch. You can remove this
       # if block if you wish to run it for others as well.
       if [[ $refname = "refs/heads/master" ]] ; then
-        git_archive_all $APP $newrev | $DUCKU_ROOT/ducku receive $APP | sed -u "s/^/"$'\e[1G'"/"
+        git_archive_all $APP $newrev | $DUCKU receive $APP | sed -u "s/^/"$'\e[1G'"/"
       else
         echo $'\e[1G\e[K'"-----> WARNING: deploy did not complete, you must push to master."
         echo $'\e[1G\e[K'"-----> for example, try 'git push <duck> ${refname/refs\/heads\/}:master'"
@@ -75,7 +79,7 @@ case "$1" in
       cat > $PRERECEIVE_HOOK <<EOF
 #!/usr/bin/env bash
 set -e; set -o pipefail;
-cat | $DUCKU_ROOT/ducku git-hook $APP
+cat | $DUCKU git-hook $APP
 EOF
       chmod +x $PRERECEIVE_HOOK
     fi
@@ -90,4 +94,4 @@ EOF
 esac
 
 # Provide a shell if no other commands match
-/bin/bash
+# /bin/bash
