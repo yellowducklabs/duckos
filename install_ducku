@@ -1,0 +1,20 @@
+#!bin/sh
+
+sudo adduser duck
+
+ducku_source="http://localhost/duckos/site/duck"
+
+curl $ducku_source -o /usr/local/bin/ducku
+
+sudo su duck
+
+cd ~
+mkdir .ssh
+
+read -r -p "Please paste SSH public key to be set up for duck access: " ssh_key
+
+cat 'command="/usr/local/bin/ducku $SSH_ORIGINAL_COMMAND" $ssh_key' > .ssh/authorized_hosts
+
+chmod go-rwx .ssh/authorized_hosts
+
+
