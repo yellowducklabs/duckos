@@ -24,18 +24,17 @@ git_archive_all() {
 
 case "$1" in
   receive)
-    APP="$2";
+    APP="$2"
     echo "---> Building $APP ..."
     cat | $DUCKU build $APP
     echo "---> Deploying $APP ..."
     $DUCKU deploy $APP
     echo "---> Application deployed"
     echo
-    exit
     ;;
 
   build)
-    APP="$2";
+    APP="$2"
     DUCKU_RUN=$DUCKU_ROOT/run
     rm -rf $DUCKU_RUN && mkdir $DUCKU_RUN
     cat | tar -xC $DUCKU_ROOT/run
@@ -44,11 +43,13 @@ case "$1" in
   deploy)
     # Node binds both input/output which hangs the deploy unless we redirect output/input
     nohup /home/mario/node/bin/node $DUCKU_ROOT/run/app.js >$DUCKU_ROOT/run.log 2>&1 </dev/null &
-    exit
     ;;
 
+  shell)
+    /bin/bash
+
   git-hook)
-    APP=$2
+    APP="$2"
 
     while read oldrev newrev refname
     do
@@ -92,6 +93,3 @@ EOF
     cat
     ;;
 esac
-
-# Provide a shell if no other commands match
-# /bin/bash
