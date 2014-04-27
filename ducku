@@ -47,6 +47,7 @@ case "$1" in
 
   shell)
     /bin/bash
+    ;;
 
   git-hook)
     APP="$2"
