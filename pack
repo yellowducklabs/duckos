@@ -1,0 +1,70 @@
+#!/bin/sh
+#
+# Package kernel and disk image to a dd-writeable FILENAME .img and gzip
+#
+# Helped along by https://github.com/gamaral/rpi-buildroot/blob/rpi/board/raspberrypi/mksdcard
+
+FILENAME="$1"
+
+usage() {
+  echo "Such pack. Many disk image. Wow automated."
+  echo ""
+  echo "Usage: ./pack outputname, i.e. ./pack duckos-rpi.img"
+}
+
+section() {
+  sync
+  echo "> ${*}"
+}
+
+# check parameters
+
+if [ -z "$FILENAME" ]; then
+  usage
+  exit 0
+fi
+
+section "Copying build-madlean-rpi/output/images/zImage => boot/kernel.img"
+cp ../../build-madlean-rpi/output/images/zImage boot/kernel.img
+
+section "Copying build-madlean-rpi/output/images/rootfs.tar.gz => rootfs.tar.gz"
+cp ../../build-madlean-rpi/output/images/rootfs.tar.gz .
+
+
+section "Creating a clean, partitioned disk image from clean.img"
+# Copy our clean disk image
+cp stuff/clean.img $FILENAME
+
+# prepare to fill partitions
+kpartx -a $FILENAME
+mkdir .mnt
+
+# fill boot
+
+section "Populating boot partition..."
+
+mount /dev/mapper/loop0p1 .mnt || exit 2
+cp boot/* .mnt
+umount .mnt
+sync
+
+# fill rootfs
+
+section "Populating rootfs partition..."
+
+mount /dev/mapper/loop0p2 .mnt || exit 2
+tar -xpsf rootfs.tar.gz -C .mnt
+umount .mnt
+sync
+
+# clean up
+kpartx -d $FILENAME
+rmdir .mnt
+
+section "Packing..."
+gzip $FILENAME
+
+section "Finished!"
+
+exit 0
+

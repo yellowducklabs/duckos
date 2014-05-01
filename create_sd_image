@@ -1,0 +1,61 @@
+#!/bin/sh
+#
+# creates a clean.img partitioned correctly to
+# be populated with files and dd'ed to a sdcard
+# for booting on the raspberry pi
+#
+# Helped along by https://github.com/gamaral/rpi-buildroot/blob/rpi/board/raspberrypi/mksdcard
+
+# create a blank image file 100MB in size
+dd if=/dev/zero of=clean.img bs=1024 count=0 seek=102400
+
+# The following steps are:
+
+# create a new empty DOS partition table
+# add a new partition
+# primary
+# partition 1
+# default start sector (2048)
+# end sector 16M down the track
+# add a new partition
+# primary
+# partition 2
+# default start sector (where last ended)
+# default end secotor (end)
+# change a partition's system id
+# partition 1
+# Changed system type of partition 1 to e (W95 FAT16 (LBA))
+# toggle a bootable flag
+# partition 1
+# write table to disk and exit
+
+fdisk clean.img <<END
+o
+n
+p
+1
+
++16M
+n
+p
+2
+
+
+t
+1
+e
+a
+1
+w
+END
+
+kpartx -a clean.img
+
+MKFS_EXT4=`which mkfs.ext4`
+MKFS_VFAT=`which mkfs.vfat`
+
+${MKFS_VFAT} -F 16 -n boot -I /dev/mapper/loop0p1 || exit 1
+${MKFS_EXT4} -L rootfs /dev/mapper/loop0p2 || exit 1
+
+kpartx -d clean.img
+
