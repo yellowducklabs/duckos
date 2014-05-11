@@ -1,3 +1,7 @@
 .DS_Store
 *sftp-config.json
+
+# Ignore directories and files created in build
 build
+sources
+*.gz

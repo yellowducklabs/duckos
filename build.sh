@@ -1,7 +1,11 @@
 #!/bin/sh
 
+source utils.sh
+
 # @ISSUE This needs to be dynamic, currently hardcoded to the local build VM
 DUCKHOST=10.0.1.28
+# @ISSUE should read in from list of implemented archs instead
+ARCH=x86
 
 # Create our build folder from our templated initrd modifications
 sudo rm -rf build
@@ -11,7 +15,17 @@ cp -R initrd_duck build
 mkdir -p build/home/duck/duck
 cp duck build/home/duck/duck/
 cp ducku build/home/duck/duck/
-cp -r sources/rpi/node build/home/duck/
+cp -r sources/$ARCH/node build/home/duck/
+
+# Set up SSH keys for root and duck
+if [[ -f ~/.ssh/id_rsa.pub ]]
+  then SSH_PUB_PATH=$(answer "Select pub key to install (~/.ssh/id_rsa.pub): " "$HOME/.ssh/id_rsa.pub")
+    SSH_AUTHORIZED_KEY='command="/usr/local/bin/ducku $SSH_ORIGINAL_COMMAND" '`cat $SSH_PUB_PATH`
+    echo $SSH_AUTHORIZED_KEY >> build/home/duck/.ssh/authorized_keys
+    echo $SSH_AUTHORIZED_KEY >> build/root/.ssh/authorized_keys
+fi
+
+exit;
 
 # The initrd overrides we're packaging should be owned by root
 sudo chown -R 0:0 build/
