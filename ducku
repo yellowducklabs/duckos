@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
+#!/bin/sh
 set -eo pipefail;
 
 export DUCKU_ROOT=${DUCKU_ROOT:="$HOME"}
-export DUCKU=${DUCKU:="/home/mario/duck/ducku"}
+export DUCKU=${DUCKU:="/usr/local/bin/ducku"}
 
 [[ $DUCKU_TRACE ]] && set -x
 
@@ -12,13 +12,14 @@ git_archive_all() {
   chmod 755 $TMP_WORK_DIR
   unset GIT_DIR GIT_WORK_TREE
   git clone $DUCKU_ROOT/$APP $TMP_WORK_DIR > /dev/null 2>&1
-  pushd $TMP_WORK_DIR > /dev/null
+
+  cd $TMP_WORK_DIR
   git config advice.detachedHead false
   git checkout $REV > /dev/null 2>&1
   git submodule update --init --recursive > /dev/null
   find -name .git -prune -exec rm -rf {} \; > /dev/null
   tar c .
-  popd > /dev/null
+  cd $DUCKU_ROOT
   rm -rf $TMP_WORK_DIR > /dev/null
 }
 
@@ -42,7 +43,7 @@ case "$1" in
 
   deploy)
     # Node binds both input/output which hangs the deploy unless we redirect output/input
-    nohup /home/mario/node/bin/node $DUCKU_ROOT/run/app.js >$DUCKU_ROOT/run.log 2>&1 </dev/null &
+    sudo nohup node $DUCKU_ROOT/run/app.js >$DUCKU_ROOT/run.log 2>&1 </dev/null &
     ;;
 
   shell)
@@ -57,7 +58,7 @@ case "$1" in
       # Only run this script for the master branch. You can remove this
       # if block if you wish to run it for others as well.
       if [[ $refname = "refs/heads/master" ]] ; then
-        git_archive_all $APP $newrev | $DUCKU receive $APP | sed -u "s/^/"$'\e[1G'"/"
+        git_archive_all $APP $newrev | $DUCKU receive $APP | sed "s/^/"$'\e[1G'"/"
       else
         echo $'\e[1G\e[K'"-----> WARNING: deploy did not complete, you must push to master."
         echo $'\e[1G\e[K'"-----> for example, try 'git push <duck> ${refname/refs\/heads\/}:master'"
@@ -79,7 +80,7 @@ case "$1" in
       git init --bare $APP_PATH > /dev/null
       PRERECEIVE_HOOK="$APP_PATH/hooks/pre-receive"
       cat > $PRERECEIVE_HOOK <<EOF
-#!/usr/bin/env bash
+#!/bin/sh
 set -e; set -o pipefail;
 cat | $DUCKU git-hook $APP
 EOF

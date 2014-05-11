@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # if [[ $(id -un) != "root" ]]; then
 #   sudo -u root -H $0 "$@"
