@@ -3,7 +3,6 @@
 # curl duckos.io/install | sh
 # wget duckos.io/install -O - | sh
 
-# duck_source="https://raw.github.com/supermario/duck/master/duck"
-duck_source="http://localhost/duckos/site/duck"
+duck_source="https://raw.githubusercontent.com/supermario/duckos/master/duck"
 
-curl $duck_source -o /usr/local/bin/dokku
+curl $duck_source -o /usr/local/bin/duck
