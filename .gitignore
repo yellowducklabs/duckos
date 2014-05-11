@@ -2,6 +2,6 @@
 *sftp-config.json
 
 # Ignore directories and files created in build
-build
-sources
+build/
+sources/
 *.gz

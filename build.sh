@@ -2,10 +2,12 @@
 
 source utils.sh
 
-# @ISSUE This needs to be dynamic, currently hardcoded to the local build VM
-DUCKHOST=10.0.1.28
 # @ISSUE should read in from list of implemented archs instead
-ARCH=x86
+ARCH=$(answer "Select an arch: x86, rpi: " "x86")
+if [[ ! -d archs/$ARCH ]]
+  then echo "Invalid arch chosen. Aborting."
+    exit
+fi
 
 # Create our build folder from our templated initrd modifications
 sudo rm -rf build
@@ -25,8 +27,6 @@ if [[ -f ~/.ssh/id_rsa.pub ]]
     echo $SSH_AUTHORIZED_KEY >> build/root/.ssh/authorized_keys
 fi
 
-exit;
-
 # The initrd overrides we're packaging should be owned by root
 sudo chown -R 0:0 build/
 # Given we're booting with the tc user=duck bootcode, uid=1000, gid=50 (staff)
@@ -40,9 +40,10 @@ cd ..
 
 # Grub doesn't support multiple initrd files, so cat core and duck together and
 # use the combined archive instead
-cat core.gz duck.gz > combined.gz
+cat archs/$ARCH/core.gz duck.gz > combined.gz
+echo "---> combined.gz built"
 
-scp -o StrictHostKeyChecking=no combined.gz root@$DUCKHOST:/mnt/sda1/boot/core.gz
-echo "---> New core.gz installed."
-
-ssh -o StrictHostKeyChecking=no root@$DUCKHOST reboot
+# Run the arch specific build
+echo "---> Running $ARCH build script"
+sh archs/$ARCH/build
+echo "---> $ARCH build complete"

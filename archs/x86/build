@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# @ISSUE This needs to be dynamic, currently hardcoded to the local build VM
+HOST=10.0.1.28
+
+scp -o StrictHostKeyChecking=no combined.gz root@$HOST:/mnt/sda1/boot/core.gz
+echo "---> New core.gz installed to VM"
+ssh -o StrictHostKeyChecking=no root@$HOST reboot

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+DUCK_IMG=duckos-rpi.img
+ARCH=rpi
+BASE=archs/$ARCH
+
+cp $BASE/piCore-5.2.2.img $BASE/$DUCK_IMG
+
+sudo kpartx -a $BASE/$DUCK_IMG
+mkdir .mnt
+sudo mount /dev/mapper/loop0p1 .mnt
+
+sudo cp combined.gz .mnt/core.gz
+
+sudo kpartx -d $BASE/$DUCK_IMG
+
+rm -rf .mnt
