@@ -6,8 +6,8 @@
 #
 # Helped along by https://github.com/gamaral/rpi-buildroot/blob/rpi/board/raspberrypi/mksdcard
 
-# create a blank image file 100MB in size
-dd if=/dev/zero of=clean.img bs=1024 count=0 seek=102400
+# create a blank image file 100MB in size (102400)
+dd if=/dev/zero of=clean.img bs=1024 count=0 seek=40960
 
 # The following steps are:
 
@@ -35,7 +35,7 @@ n
 p
 1
 
-+16M
++32M
 n
 p
 2
@@ -49,13 +49,17 @@ a
 w
 END
 
+sync
+
 kpartx -a clean.img
 
-MKFS_EXT4=`which mkfs.ext4`
 MKFS_VFAT=`which mkfs.vfat`
+MKFS_EXT4=`which mkfs.ext4`
 
 ${MKFS_VFAT} -F 16 -n boot -I /dev/mapper/loop0p1 || exit 1
+sync
 ${MKFS_EXT4} -L rootfs /dev/mapper/loop0p2 || exit 1
+sync
 
 kpartx -d clean.img
 
