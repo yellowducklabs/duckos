@@ -1,17 +1,25 @@
 #!/bin/sh
+set -x
 
-DUCK_IMG=duckos-rpi.img
 ARCH=rpi
 BASE=archs/$ARCH
+DUCK_IMG=$BASE/duckos-$ARCH.img
 
-cp $BASE/piCore-5.2.2.img $BASE/$DUCK_IMG
+cp clean.img $DUCK_IMG
 
-sudo kpartx -a $BASE/$DUCK_IMG
+sudo kpartx -a $DUCK_IMG
 mkdir .mnt
 sudo mount /dev/mapper/loop0p1 .mnt
 
-sudo cp combined.gz .mnt/core.gz
+# Copy the boot files
+sudo cp -rp $BASE/boot/* .mnt/
+# Replace the core.gz with our modified one
+sudo cp combined.gz .mnt/140416a.gz
 
-sudo kpartx -d $BASE/$DUCK_IMG
+SIZE=$(ls -l .mnt/140416a.gz | cut -d' ' -f 5)
 
+echo "wc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 initrd=0xa00000,$SIZE root=/dev/ram0 elevator=deadline rootwait nortc loglevel=3 waitusb=5 user=duck" > .mnt/cmdline.txt
+
+sudo umount .mnt
+sudo kpartx -d $DUCK_IMG
 rm -rf .mnt
