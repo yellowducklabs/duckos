@@ -5,10 +5,13 @@ ARCH=rpi
 BASE=archs/$ARCH
 DUCK_IMG=$BASE/duckos-$ARCH.img
 
+# Create from clean FS image
 cp clean.img $DUCK_IMG
-
 sudo kpartx -a $DUCK_IMG
 mkdir .mnt
+
+# Populate the boot partition
+
 sudo mount /dev/mapper/loop0p1 .mnt
 
 # Copy the boot files
@@ -21,5 +24,17 @@ SIZE=$(ls -l .mnt/140416a.gz | cut -d' ' -f 5)
 echo "wc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 initrd=0xa00000,$SIZE root=/dev/ram0 elevator=deadline rootwait nortc loglevel=3 waitusb=5 user=duck" > .mnt/cmdline.txt
 
 sudo umount .mnt
+
+
+# Populate the persistent partition
+
+sudo mount /dev/mapper/loop0p2 .mnt
+
+sudo cp -rp $BASE/persistent/* .mnt/
+sudo chown -R 1000:50 .mnt/
+
+sudo umount .mnt
+
+
 sudo kpartx -d $DUCK_IMG
 rm -rf .mnt
