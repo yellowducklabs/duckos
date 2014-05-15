@@ -28,6 +28,7 @@ if [[ -f ~/.ssh/id_rsa.pub ]]
 fi
 
 # Generate new host keys
+ssh-keygen -N "" -t 'rsa' -f build/usr/local/etc/ssh/ssh_host_key
 ssh-keygen -N "" -t 'rsa' -f build/usr/local/etc/ssh/ssh_host_rsa_key
 ssh-keygen -N "" -t 'dsa' -f build/usr/local/etc/ssh/ssh_host_dsa_key
 ssh-keygen -N "" -t 'ecdsa' -f build/usr/local/etc/ssh/ssh_host_ecdsa_key
