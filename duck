@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -x
+
 # if [[ $(id -un) != "root" ]]; then
 #   sudo -u root -H $0 "$@"
 #   exit
@@ -31,6 +33,8 @@ case "$1" in
     for filesystem in `ls -1 $disk_device?*`; do
         sudo umount -f $filesystem
     done
+
+    sudo umount -f $disk_device
 
     echo "---> Writing DuckOS to $disk_device..."
 

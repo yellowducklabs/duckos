@@ -6,3 +6,7 @@
 duck_source="https://raw.githubusercontent.com/supermario/duckos/master/duck"
 
 curl $duck_source -o /usr/local/bin/duck
+
+chmod +x duck
+
+exec $SHELL
