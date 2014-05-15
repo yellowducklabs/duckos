@@ -21,7 +21,7 @@ sudo cp combined.gz .mnt/140416a.gz
 
 SIZE=$(ls -l .mnt/140416a.gz | cut -d' ' -f 5)
 
-echo "wc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 initrd=0xa00000,$SIZE root=/dev/ram0 elevator=deadline rootwait nortc loglevel=3 waitusb=5 user=duck" > .mnt/cmdline.txt
+echo "wc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 initrd=0xa00000,$SIZE root=/dev/ram0 elevator=deadline rootwait nortc loglevel=3 waitusb=5 user=duck tce=mmcblk0p2" > .mnt/cmdline.txt
 
 sudo umount .mnt
 
