@@ -27,6 +27,11 @@ if [[ -f ~/.ssh/id_rsa.pub ]]
     echo $SSH_AUTHORIZED_KEY >> build/root/.ssh/authorized_keys
 fi
 
+# Generate new host keys
+ssh-keygen -N "" -t 'rsa' -f build/usr/local/etc/ssh/ssh_host_rsa_key
+ssh-keygen -N "" -t 'dsa' -f build/usr/local/etc/ssh/ssh_host_dsa_key
+ssh-keygen -N "" -t 'ecdsa' -f build/usr/local/etc/ssh/ssh_host_ecdsa_key
+
 # The initrd overrides we're packaging should be owned by root
 sudo chown -R 0:0 build/
 # Given we're booting with the tc user=duck bootcode, uid=1000, gid=50 (staff)
