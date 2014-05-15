@@ -6,8 +6,8 @@
 #
 # Helped along by https://github.com/gamaral/rpi-buildroot/blob/rpi/board/raspberrypi/mksdcard
 
-# create a blank image file 100MB in size (102400)
-dd if=/dev/zero of=clean.img bs=1024 count=0 seek=40960
+# create a blank image file 60MB in size (61440)
+dd if=/dev/zero of=clean.img bs=1024 count=0 seek=61440
 
 # The following steps are:
 
