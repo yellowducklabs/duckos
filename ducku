@@ -42,6 +42,7 @@ case "$1" in
     ;;
 
   deploy)
+    sudo killall node
     # Node binds both input/output which hangs the deploy unless we redirect output/input
     sudo nohup node $DUCKU_ROOT/run/app.js >$DUCKU_ROOT/run.log 2>&1 </dev/null &
     ;;
