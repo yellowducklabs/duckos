@@ -39,7 +39,7 @@ case "$1" in
     echo "---> Writing DuckOS to $disk_device..."
 
     # write disk image to device
-    ./bar -c 'gunzip -c -' $duckos_img | sudo dd of=$disk_device
+    ./bar -c 'gunzip -c' $duckos_img | sudo dd of=$disk_device
 
     echo "===> DuckOS install complete!"
 
