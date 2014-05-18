@@ -16,12 +16,10 @@ Write
 Insert an SD card on host and run `duck write`
 
 ```
----> Downloading DuckOS...
+---> Downloading latest DuckOS...
 Select disk device (data will be destroyed): /dev/disk2
----> Writing partitions...
----> Installing files...
-Configure root password (duckos):
-===> DuckOS install complete!
+---> Writing DuckOS to /dev/disk2...
+---> DuckOS install complete!
 ```
 
 Deploy
@@ -31,8 +29,8 @@ Deploy
 $ echo 'Hello world!' > app.js
 $ git init; git add app.js
 $ git commit -m "First release"
-$ git push duck@10.0.1.10 master
----> Node.js app detected...
-===> Application deployed
-http://10.0.1.10
+$ git push duck@10.0.1.15:app master
+---> Building App...
+---> Deploying App...
+---> Application deployed
 ```
