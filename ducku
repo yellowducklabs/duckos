@@ -59,10 +59,10 @@ case "$1" in
       # Only run this script for the master branch. You can remove this
       # if block if you wish to run it for others as well.
       if [[ $refname = "refs/heads/master" ]] ; then
-        git_archive_all $APP $newrev | $DUCKU receive $APP | sed "s/^/"$'\e[1G'"/"
+        git_archive_all $APP $newrev | $DUCKU receive $APP
       else
-        echo $'\e[1G\e[K'"-----> WARNING: deploy did not complete, you must push to master."
-        echo $'\e[1G\e[K'"-----> for example, try 'git push <duck> ${refname/refs\/heads\/}:master'"
+        echo "-----> WARNING: deploy did not complete, you must push to master."
+        echo "-----> for example, try 'git push <duck> ${refname/refs\/heads\/}:master'"
       fi
 
     done
@@ -70,7 +70,7 @@ case "$1" in
 
   git-*)
 
-    APP="$(echo $2 | perl -pe 's/(?<!\\)'\''//g' | sed 's/\\'\''/'\''/g')"
+    APP="$(echo $2 | cut -d'`' -f 2)"
 
     # Would be nicer to put the checkout in ~/repos or something
     # but have banged my head against getting git-receive-pack to

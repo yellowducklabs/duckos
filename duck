@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -x
+# set -x
 
 # if [[ $(id -un) != "root" ]]; then
 #   sudo -u root -H $0 "$@"
@@ -41,7 +41,7 @@ case "$1" in
     # write disk image to device
     ./bar -c 'gunzip -c' $duckos_img | sudo dd of=$disk_device
 
-    echo "===> DuckOS install complete!"
+    echo "---> DuckOS install complete!"
 
     ;;
 
