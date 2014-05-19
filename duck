@@ -46,8 +46,18 @@ case "$1" in
     ;;
 
   find)
-    # ---> Searching for DuckOS hosts...
-    # 10.0.1.15 (raspberrypi)
+    handshaker_port=7887
+    echo "---> Seeking ducks, please be patient..."
+    subnet=`ifconfig | grep broadcast | cut -d' ' -f2 | cut -d'.' -f1-3`
+    for ((host=0; host<=255; host++));
+    do
+      ip=$subnet.$host
+      response=`curl -m1 --connect-timeout 1 $ip:$handshaker_port 2>&1`
+      if [[ $response =~ "reply" ]];
+      then
+        echo "Quack! DuckOS detected on IP: "$ip
+      fi
+    done
     ;;
 
   help)
