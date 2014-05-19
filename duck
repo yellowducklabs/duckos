@@ -34,7 +34,7 @@ case "$1" in
         sudo umount -f $filesystem
     done
 
-    sudo umount -f $disk_device
+    sudo -p "Sudo password: " umount -f $disk_device
 
     echo "---> Writing DuckOS to $disk_device..."
 
@@ -59,15 +59,6 @@ EOF
     ;;
 
   *)
-    # @TODO bind any other commmands as passthrough?
-    #
-    # $ echo 'Hello world!' > app.js
-    # $ git init; git add app.js
-    # $ git commit -m "First release"
-    # $ git push duck@10.0.1.15 master
-    # ---> Node.js app detected...
-    # ===> Application deployed
-    #      http://10.0.1.15
     ;;
 
 esac
