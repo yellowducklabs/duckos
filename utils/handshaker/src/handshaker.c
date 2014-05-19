@@ -31,7 +31,7 @@ cli_arguments_t parse_arguments(int argc, char *argv[]) {
     //  to an integer
     arguments.port_number = atoi(argv[1]);
   } else {
-    printf("%s\n", "\nUsage: handshake <port>");
+    printf("%s\n", "\nUsage: handshaker <port>");
     exit(EXIT_FAILURE);
   }
   return arguments;
@@ -42,12 +42,13 @@ cli_arguments_t parse_arguments(int argc, char *argv[]) {
  * @param int port - Port to bind a socket to
  */
 void create_socket(int port) {
-  int listenfd = 0, connfd = 0;
+  int listenfd = 0;
+  int connfd = 0;
   sin serv_addr;
-
   char sendBuff[1025];
   time_t ticks;
 
+  printf("Creating a socket...\n");
   listenfd = socket(AF_INET, SOCK_STREAM, 0);
   memset(&serv_addr, '0', sizeof(serv_addr));
   memset(sendBuff, '0', sizeof(sendBuff));
@@ -57,13 +58,16 @@ void create_socket(int port) {
   serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
   serv_addr.sin_port        = htons(port);
 
+  printf("Binding...\n");
   // Bind the socket
   bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
   // Listen
   listen(listenfd, 10);
+  printf("Listening on port %d\n", port);
 
   while(1) {
+    // Accept connections and print the data sent
     connfd = accept(listenfd, (struct sockaddr*)NULL, NULL);
     ticks = time(NULL);
     snprintf(sendBuff, sizeof(sendBuff), "%.24s\r\n", ctime(&ticks));
@@ -78,8 +82,12 @@ void create_socket(int port) {
  */
 int main(int argc, char *argv[])
 {
+  // Get the arguments & parse
   cli_arguments_t arguments;
   arguments = parse_arguments(argc, argv);
+
+  // Simple socket creation
   create_socket(arguments.port_number);
+
   return EXIT_SUCCESS;
 }
