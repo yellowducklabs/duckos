@@ -1,10 +1,8 @@
-# To build:
+# Build
 make all
 
-# To run:
-make run
-or
-./bin/handshaker
+# Run
+./bin/handshaker <port_number>
 
-# To clean
+# Clean
 make clean all
