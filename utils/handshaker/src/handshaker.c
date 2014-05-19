@@ -7,7 +7,6 @@
 #include <errno.h>
 #include <string.h>
 #include <sys/types.h>
-#include <time.h>
 
 typedef struct sockaddr_in sin;
 
@@ -20,9 +19,9 @@ typedef struct cli_arguments {
 
 /**
  * Parses CLI arguments into a structure
- * @param  argc Number of arguments supplied
- * @param  argv Array of argument strings
- * @return      cli_arguments_t
+ * @param  int argc         - Number of arguments supplied
+ * @param  char** argv      - Array of argument strings
+ * @return cli_arguments_t  - CLI Arguments
  */
 cli_arguments_t parse_arguments(int argc, char *argv[]) {
   cli_arguments_t arguments;
@@ -38,56 +37,64 @@ cli_arguments_t parse_arguments(int argc, char *argv[]) {
 }
 
 /**
- * Creates a socket and binds it to a port
- * @param int port - Port to bind a socket to
+ * Creates a AF_INET socket (SOCK_STREAM type) and
+ * binds it to a port specified.
+ *
+ * @param   int port    - Port to bind a socket to
+ * @return  int socket  - Socket file descriptor
  */
-void create_socket(int port) {
-  int listenfd = 0;
-  int connfd = 0;
-  sin serv_addr;
-  char sendBuff[1025];
-  time_t ticks;
+int make_socket(uint16_t port) {
+  int sock;
+  struct sockaddr_in name;
 
-  printf("Creating a socket...\n");
-  listenfd = socket(AF_INET, SOCK_STREAM, 0);
-  memset(&serv_addr, '0', sizeof(serv_addr));
-  memset(sendBuff, '0', sizeof(sendBuff));
+  /* Create the socket. */
+  sock = socket(AF_INET, SOCK_STREAM, 0);
+  if (sock < 0) {
+    perror("socket");
+    exit(EXIT_FAILURE);
+  }
 
-  // Define a socket
-  serv_addr.sin_family      = AF_INET;
-  serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-  serv_addr.sin_port        = htons(port);
+  /* Give the socket a name */
+  name.sin_family      = AF_INET;
+  name.sin_port        = htons(port);
+  name.sin_addr.s_addr = htonl(INADDR_ANY);
 
-  printf("Binding...\n");
-  // Bind the socket
-  bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+  /* Bind the socket */
+  if (bind(sock, (struct sockaddr*)&name, sizeof (name)) < 0) {
+    perror("bind");
+    exit(EXIT_FAILURE);
+  }
 
-  // Listen
-  listen(listenfd, 10);
-  printf("Listening on port %d\n", port);
-
-  while(1) {
-    // Accept connections and print the data sent
-    connfd = accept(listenfd, (struct sockaddr*)NULL, NULL);
-    ticks = time(NULL);
-    snprintf(sendBuff, sizeof(sendBuff), "%.24s\r\n", ctime(&ticks));
-    write(connfd, sendBuff, strlen(sendBuff));
-    close(connfd);
-    sleep(1);
-   }
+  return sock;
 }
+
 
 /**
  * Main function
  */
 int main(int argc, char *argv[])
 {
-  // Get the arguments & parse
-  cli_arguments_t arguments;
-  arguments = parse_arguments(argc, argv);
+  /* Get the arguments & parse to settings */
+  cli_arguments_t settings;
+  settings = parse_arguments(argc, argv);
 
-  // Simple socket creation
-  create_socket(arguments.port_number);
+  /* Socket & Connection file descriptors */
+  int listenfd;
+  int connfd;
+
+  /* Socket initialization */
+  listenfd = make_socket(settings.port_number);
+  if (listen(listenfd, 10) < 0) {
+    perror("listen");
+    exit(EXIT_FAILURE);
+  }
+
+  while(1) {
+    /* Accept connections and close them immediatelly */
+    connfd = accept(listenfd, (struct sockaddr*) NULL, NULL);
+    close(connfd);
+    sleep(1);
+  }
 
   return EXIT_SUCCESS;
 }
