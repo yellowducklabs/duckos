@@ -16,7 +16,6 @@ git_archive_all() {
   cd $TMP_WORK_DIR
   git config advice.detachedHead false
   git checkout $REV > /dev/null 2>&1
-  git submodule update --init --recursive > /dev/null
   find -name .git -prune -exec rm -rf {} \; > /dev/null
   tar c .
   cd $DUCKU_ROOT
