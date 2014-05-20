@@ -15,8 +15,8 @@ fi
 
 duck_tmp="$HOME/.duck"
 [[ -d $duck_tmp ]] || mkdir $duck_tmp
-duckos_latest="http://localhost/duckos/duckos-rpi.img.gz"
-duckos_img=$duck_tmp/duckos-rpi.img.gz
+duckos_latest="http://releases.duckos.io/duckos-rpi-0.1.img.gz"
+duckos_img=$duck_tmp/duckos-rpi-0.1.img.gz
 
 function confirm {
   # call with a prompt string or use a default
