@@ -56,10 +56,10 @@ case "$1" in
 
     # ensure our device is unmounted
     for filesystem in `ls -1 $disk_device?*`; do
-        sudo umount -f $filesystem
+        sudo -p "Sudo password: " umount -f $filesystem 2>/dev/null
     done
 
-    sudo -p "Sudo password: " umount -f $disk_device
+    sudo -p "Sudo password: " umount -f $disk_device 2>/dev/null
 
     echo "---> Writing DuckOS to $disk_device..."
 
