@@ -71,8 +71,22 @@ case "$1" in
     ;;
 
   find)
-    # ---> Searching for DuckOS hosts...
-    # 10.0.1.15 (raspberrypi)
+    echo "---> Seeking ducks, please be patient..."
+    # Default handshaker port
+    quacker_port=10002
+    # Get a broadcast range
+    broadcast_range=$(ping -c2 255.255.255.255 | grep "64 bytes" | cut -d' ' -f4 | sort | uniq | cut -d':' -f1)
+    for ip in $broadcast_range;
+    do
+      # Get curl response
+      response=$(curl -m1 --connect-timeout 2 $ip:$quacker_port 2>&1)
+      response_code=$?
+      case $response_code in
+        56 )
+            echo "Quack! DuckOS detected on IP: "$ip
+        ;;
+      esac
+    done
     ;;
 
   push)
