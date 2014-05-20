@@ -61,10 +61,17 @@ case "$1" in
 
     sudo -p "Sudo password: " umount -f $disk_device 2>/dev/null
 
+    echo "---> Getting bar utility..."
+    bar_source="https://raw.githubusercontent.com/yellowducklabs/duckos/master/bar"
+    curl $bar_source -o /tmp/bar 2>/dev/null
+    chmod +x /tmp/bar
+
     echo "---> Writing DuckOS to $disk_device..."
 
+
+
     # write disk image to device
-    ./bar -c 'gunzip -c' $duckos_img | sudo dd of=$disk_device 2>/dev/null
+    /tmp/bar -c 'gunzip -c' $duckos_img | sudo dd of=$disk_device 2>/dev/null
 
     echo "---> DuckOS install complete!"
 
