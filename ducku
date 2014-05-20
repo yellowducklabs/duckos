@@ -41,7 +41,7 @@ case "$1" in
     ;;
 
   deploy)
-    sudo killall node
+    [[ `pidof node` ]] && sudo killall node
     # Node binds both input/output which hangs the deploy unless we redirect output/input
     sudo nohup node $DUCKU_ROOT/run/app.js >$DUCKU_ROOT/run.log 2>&1 </dev/null &
     ;;
@@ -69,7 +69,7 @@ case "$1" in
 
   git-*)
 
-    APP="$(echo $2 | cut -d'`' -f 2)"
+    APP="$(echo $2 | cut -d"'" -f 2)"
 
     # Would be nicer to put the checkout in ~/repos or something
     # but have banged my head against getting git-receive-pack to
