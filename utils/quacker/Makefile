@@ -39,7 +39,7 @@ DEBUG = -g
 # Root of the project
 BASE = .
 
-PROJECT_NAME = handshaker
+PROJECT_NAME = quacker
 
 SRC_DIR = $(BASE)/src
 INC_DIR = $(BASE)/inc

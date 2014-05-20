@@ -30,7 +30,7 @@ cli_arguments_t parse_arguments(int argc, char *argv[]) {
     //  to an integer
     arguments.port_number = atoi(argv[1]);
   } else {
-    printf("%s\n", "\nUsage: handshaker <port>");
+    printf("%s\n", "\nUsage: quacker <port>");
     exit(EXIT_FAILURE);
   }
   return arguments;
