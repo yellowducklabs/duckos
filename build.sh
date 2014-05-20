@@ -19,13 +19,10 @@ cp duck build/home/duck/duck/
 cp ducku build/home/duck/duck/
 cp -r sources/$ARCH/node build/home/duck/
 
-# Set up SSH keys for root and duck
-if [[ -f ~/.ssh/id_rsa.pub ]]
-  then SSH_PUB_PATH=$(answer "Select pub key to install (~/.ssh/id_rsa.pub): " "$HOME/.ssh/id_rsa.pub")
-    SSH_AUTHORIZED_KEY='command="/usr/local/bin/ducku $SSH_ORIGINAL_COMMAND" '`cat $SSH_PUB_PATH`
-    echo $SSH_AUTHORIZED_KEY >> build/home/duck/.ssh/authorized_keys
-    echo $SSH_AUTHORIZED_KEY >> build/root/.ssh/authorized_keys
-fi
+# Set up the default SSH keys for root and duck
+SSH_AUTHORIZED_KEY='command="/usr/local/bin/ducku $SSH_ORIGINAL_COMMAND" '`cat duckauth.pub`
+echo $SSH_AUTHORIZED_KEY >> build/home/duck/.ssh/authorized_keys
+echo $SSH_AUTHORIZED_KEY >> build/root/.ssh/authorized_keys
 
 # Generate new host keys
 ssh-keygen -N "" -t 'rsa' -f build/usr/local/etc/ssh/ssh_host_key
