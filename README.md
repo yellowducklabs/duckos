@@ -24,10 +24,18 @@ Select disk device (data will be destroyed): /dev/disk2
 
 Deploy
 --------
+Insert SD into Pi, connect network cable and turn on.
 
+After a few seconds, run duck push in your git project folder
 ```
-duck push
+---> Looking for ducks...
+Please enter the device IP (hit enter to use 11.22.33.44):
+---> Pushing master branch...
+...
 ---> Building App...
 ---> Deploying App...
 ---> Application deployed
+
+To duck@11.22.33.44:app
+ * [new branch]      master -> master
 ```
