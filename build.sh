@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source utils.sh
+source src/utils.sh
 
 # @ISSUE should read in from list of implemented archs instead
 ARCH=$(answer "Select an arch: x86, rpi: " "x86")
