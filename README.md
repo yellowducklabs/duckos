@@ -26,7 +26,7 @@ Deploy
 --------
 Insert SD into Pi, connect network cable and turn on.
 
-After a few seconds, run duck push in your git project folder
+After a few seconds, run `duck push` in your git project folder
 ```
 ---> Looking for ducks...
 Please enter the device IP (hit enter to use 11.22.33.44):
