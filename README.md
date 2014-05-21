@@ -26,10 +26,7 @@ Deploy
 --------
 
 ```
-$ echo 'Hello world!' > app.js
-$ git init; git add app.js
-$ git commit -m "First release"
-$ git push duck@10.0.1.15:app master
+duck push
 ---> Building App...
 ---> Deploying App...
 ---> Application deployed
