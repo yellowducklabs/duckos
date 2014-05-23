@@ -36,6 +36,11 @@ END
     echo
     ;;
 
+  receive-gzip)
+    APP="$2"
+    cat | gunzip | tar c | duck receive $APP
+    ;;
+
   build)
     APP="$2"
     DUCKU_RUN=$DUCKU_ROOT/run
