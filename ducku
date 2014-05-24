@@ -38,7 +38,7 @@ END
 
   receive-gzip)
     APP="$2"
-    cat | gunzip | tar c | duck receive $APP
+    cat | gunzip -c | tar c | duck receive $APP
     ;;
 
   build)
