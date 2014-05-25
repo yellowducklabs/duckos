@@ -1,12 +1,11 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # curl duckos.io/install | sh
 # wget duckos.io/install -O - | sh
 
 duck_source="https://raw.githubusercontent.com/yellowducklabs/duckos/master/duck"
-
-curl $duck_source -o /usr/local/bin/duck
-
+echo "---> Downloading duck source..."
+curl -s $duck_source -o /usr/local/bin/duck
 chmod +x /usr/local/bin/duck
-
+echo "---> Installed duck! Try running 'duck' for commands."
 exec $SHELL

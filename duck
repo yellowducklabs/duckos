@@ -142,7 +142,7 @@ case "$1" in
     cat<<EOF
     write           Writes DuckOS onto a present SD Card / USB Drive
     find            Searches for DuckOS hosts on the current network
-    help            Prints the list of commands
+    help            Prints this list of commands
 EOF
     ;;
 
