@@ -17,7 +17,6 @@ cp -R initrd_duck build
 mkdir -p build/home/duck/duck
 cp duck build/home/duck/duck/
 cp ducku build/home/duck/duck/
-cp -r sources/$ARCH/* build/home/duck/
 
 # Set up the default SSH keys for root and duck
 SSH_AUTHORIZED_KEY='command="/usr/local/bin/ducku $SSH_ORIGINAL_COMMAND" '`cat duckauth.pub`

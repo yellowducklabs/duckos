@@ -18,7 +18,7 @@ duck_tmp="$HOME/.duck"
 duckos_latest="http://releases.duckos.io/duckos-rpi-0.1.img.gz"
 duckos_img=$duck_tmp/duckos-rpi-0.1.img.gz
 
-function confirm {
+confirm() {
   # call with a prompt string or use a default
   read -r -p "${1:-Are you sure?} [y/N] " response
   case $response in
@@ -31,7 +31,7 @@ function confirm {
   esac
 }
 
-function answer {
+answer() {
   read -r -p "$1" response
   case $response in
     "")
@@ -64,7 +64,7 @@ case "$1" in
     echo "---> Writing DuckOS to $disk_device..."
 
     # write disk image to device
-    ./bar -c 'gunzip -c' $duckos_img | sudo dd of=$disk_device 2>/dev/null
+    bar -c 'gunzip -c' $duckos_img | sudo dd of=$disk_device 2>/dev/null
 
     echo "---> DuckOS install complete!"
 
