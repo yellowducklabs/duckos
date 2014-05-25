@@ -30,7 +30,9 @@ case "$1" in
     echo "---> Deploying $APP ..."
     $DUCKU deploy $APP
     echo "---> Application deployed"
-    sudo backup
+    sudo backup <<END
+y
+END
     echo
     ;;
 
