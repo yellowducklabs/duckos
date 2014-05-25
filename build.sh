@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Build must run as root
+if [[ $(id -un) != "root" ]]; then
+  sudo -u root -H $0 "$@"
+  exit
+fi
+
 source src/utils.sh
 
 # @ISSUE should read in from list of implemented archs instead
