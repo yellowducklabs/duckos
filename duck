@@ -52,7 +52,7 @@ case "$1" in
         curl $duckos_latest -o $duckos_img
     fi
 
-    read -r -p "Select disk device (data will be destroyed): " disk_device
+    read -r -p "Select disk device (all data will be lost!): " disk_device
 
     # ensure our device is unmounted
     for filesystem in `ls -1 $disk_device?*`; do
