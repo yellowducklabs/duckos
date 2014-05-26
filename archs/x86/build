@@ -4,6 +4,8 @@ set -x
 # @ISSUE This needs to be dynamic, currently hardcoded to the local build VM
 HOST=10.0.1.28
 
+ssh-keygen -R $HOST
+
 # Use private key and skip host checking as keys change each build
 args="-i duckauth.priv -o StrictHostKeyChecking=no"
 
@@ -11,7 +13,7 @@ echo "---> Installing new core.gz to VM..."
 scp $args combined.gz root@$HOST:/mnt/sda1/boot/core.gz
 
 echo "---> Copying persistent files..."
-scp $args -r archs/x86/persistent/ root@$HOST:/mnt/sda1/
+scp $args -r archs/x86/persistent/* root@$HOST:/mnt/sda1/
 
 echo "---> Issuing reboot..."
 ssh $args root@$HOST reboot

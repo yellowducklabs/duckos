@@ -12,4 +12,4 @@ sysctl -w net.ipv4.icmp_echo_ignore_broadcasts=0
 # Start Quacker
 /home/duck/quacker 10002 &
 
-duck deploy app
+# duck deploy app
