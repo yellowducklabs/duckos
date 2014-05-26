@@ -13,7 +13,7 @@ fi
 sudo rm -rf build
 cp -R initrd_duck build
 
-# Copy in duck, ducku and node binaries
+# Copy in duck and ducku
 mkdir -p build/home/duck/duck
 cp duck build/home/duck/duck/
 cp ducku build/home/duck/duck/
@@ -21,7 +21,7 @@ cp ducku build/home/duck/duck/
 # Set up the default SSH keys for root and duck
 SSH_AUTHORIZED_KEY='command="/usr/local/bin/ducku $SSH_ORIGINAL_COMMAND" '`cat duckauth.pub`
 echo $SSH_AUTHORIZED_KEY >> build/home/duck/.ssh/authorized_keys
-echo $SSH_AUTHORIZED_KEY >> build/root/.ssh/authorized_keys
+cat duckauth.pub >> build/root/.ssh/authorized_keys
 
 # Generate new host keys
 ssh-keygen -N "" -t 'rsa' -f build/usr/local/etc/ssh/ssh_host_key
