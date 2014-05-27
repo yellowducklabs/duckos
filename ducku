@@ -38,10 +38,10 @@ END
 
   receive-gzip)
     APP="$2"
+    cat > $DUCKU_ROOT/app.tar.gz
     mkdir -p $DUCKU_ROOT/run
-
-    cat > $DUCKU_ROOT/run/app.gz
-    gunzip $DUCKU_ROOT/run/app.gz
+    tar -xf $DUCKU_ROOT/app.tar.gz -C $DUCKU_ROOT/run
+    rm $DUCKU_ROOT/app.tar.gz
     $DUCKU deploy
     ;;
 
