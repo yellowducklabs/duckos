@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eo pipefail;
 
-export DUCKU_ROOT=${DUCKU_ROOT:="$HOME"}
+export DUCKU_ROOT=${DUCKU_ROOT:="/home/duck"}
 export DUCKU=${DUCKU:="/usr/local/bin/ducku"}
 
 [[ $DUCKU_TRACE ]] && set -x
@@ -30,7 +30,25 @@ case "$1" in
     echo "---> Deploying $APP ..."
     $DUCKU deploy $APP
     echo "---> Application deployed"
+    sudo backup <<END
+y
+END
     echo
+    ;;
+
+  receive-gzip)
+    APP="$2"
+    echo "---> Receiving $APP ..."
+    cat > $DUCKU_ROOT/app.tar.gz
+    echo "---> Building $APP ..."
+    mkdir -p $DUCKU_ROOT/run
+    tar -xf $DUCKU_ROOT/app.tar.gz -C $DUCKU_ROOT/run
+    rm $DUCKU_ROOT/app.tar.gz
+    $DUCKU deploy
+    echo "---> Application deployed"
+    sudo backup <<END
+y
+END
     ;;
 
   build)

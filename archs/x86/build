@@ -3,6 +3,20 @@
 # @ISSUE This needs to be dynamic, currently hardcoded to the local build VM
 HOST=10.0.1.28
 
-scp -o StrictHostKeyChecking=no combined.gz root@$HOST:/mnt/sda1/boot/core.gz
-echo "---> New core.gz installed to VM"
-ssh -o StrictHostKeyChecking=no root@$HOST reboot
+# Remove the host key given host keys change each build
+ssh-keygen -R $HOST
+
+# Use private key and skip host checking just incase key removal failed
+args="-i duckauth.priv -o StrictHostKeyChecking=no"
+
+echo "---> Installing new core.gz to VM..."
+scp $args combined.gz root@$HOST:/mnt/sda1/boot/core.gz
+
+echo "---> Removing tce/optional directory..."
+ssh $args root@$HOST rm -rf /mnt/sda1/tce/optional/*
+
+echo "---> Copying persistent files..."
+scp $args -r archs/x86/persistent/* root@$HOST:/mnt/sda1/
+
+echo "---> Issuing reboot..."
+ssh $args root@$HOST reboot

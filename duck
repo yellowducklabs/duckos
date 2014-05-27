@@ -18,6 +18,39 @@ duck_tmp="$HOME/.duck"
 duckos_latest="http://releases.duckos.io/duckos-rpi-0.1.img.gz"
 duckos_img=$duck_tmp/duckos-rpi-0.1.img.gz
 
+# Default DuckOS auth private (public) key
+# @SECURITY once we have a reasonable persistence model this key
+# will be replaced by the user's own on first connect
+duckauth_priv_tmp=/tmp/duckauth.priv
+echo "-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEAy0e8EmWwxGWFhmjdgbzQs9jLqIpaQa07A4QpsIC+hIO5EhVL
+qbcRa5mRveioG6h76hkUbZRrQ+Ptl55/0QYqAw9LjOoB9L8jkLLKDIr4Rv8CI8nX
+p0S0gzAgOoxPNVM+F2V/c4eyNxYQ5QQN40LeiTcG8rjzi2EMCcIwflImpkuYpXt/
+LGyzt8LC0HsSQuPCJp3iY1aX84eT93833cUm7X/hP4WFHjn6pVO2H6mgPKPDSvU0
+NbvggDo9UV4jW3VqRPiwfG1MhFe705jzsDzlJhW8Z2tI7MRjRMxboshTUs2mqN/w
+/ku3hhmbfEQ9IQALzOYX8hN4D/j+wnjKmlut/QIDAQABAoIBAAuwx28jbAQPdpth
+QoPokPQW3reFpWUrij5Mhn1BGjPSw3z3vo83GQhgH5KVY72bdezjnloi8/xGim5y
+zhT+TsI4SfcDqjMiHvB+Z8JK57ZligD25bEX8W2uAdx8Hz4I2IRN8QN65VPnr/cL
+waS1PskTYhHpcxAr955EDbfmD5T2n5y+w6tEiackkREvdo7gXhvtvfN5HajzgCIg
+6l+P4LKU3CnAR7nIsKLLOQKTuqODGNhvnU8sFD/wkYCao9I3kp5ipqsePv9wfz47
+fuy9SmR2W6sCNbJM2FiuSnXwFKF1zMwQLfyStV/KAkN2saDZeQwYCdECbwCUeyAJ
+zIXXhWECgYEA/w1ZQdMRy3y6AGrzS5GE3toO7aWOHQXQoga7QYzpq6OouUzha3n+
+edpTT6YqMsQ6Rxt4CT5qEFoZ/tsaec9CyFSPqiXrEQHq/IqGp6RX6Jh8QaQ+CZS+
+yUvZsYibj3em3m+45zMHKdLIoeFBKuK1H0ErycnEozfwolKoI0lHsIUCgYEAzAkh
+madQ7YzdrqXiib5H7lmtdh6AENQ7l4+QpYYGDSejNnEVKKXm+pz1ro3TBo0leGne
+/lsA44FtGi38Lc1xz8omy/Cy22ujG1a929KNoRQI/92bXrB89yBeG7iZ8iR6g1vu
+LwhIbb45z1NbS99l5XGA/BqSEuyUkr1R3z3I/RkCgYEAz7mPeIzvcUukMbLpdCKQ
+lPAEOIkdtYWG5m+VE04xAhnI0SJMdbxmBdhLAhPTSoWG8WLt4Jl0yNyZT3gjmBG1
+0nMMjwdS7Acj24r3IJI5BrcqfEvIOwVqXYfpRS59g9tvjLpxXduxed6yiSVsbgE2
+gr4Ra8do34Yv9gRb7GFCggECgYEAk37GW10ok5ERb/9bFFgJh7QsQQcrbP7/VUDj
+P8Ty+u98fQ6iTRAhOWnd8KF1u3atb66ZFSaULeKSDCrR8gpiC+QGx8bohNX6wvih
+pxc+awMgvlZkyr6ql7s+TKvWHcVhCzSZqkZClZK+F7IafW6xKnwy0gwjLKr5fFp/
+pPH1KYECgYBdvfLfwcweSp2gNh4xHx2kRlnnBYglu5lqGFUUXSwl0OlqnXeiKu/q
+CknOTFrij04va7CLDfFhMZ0opmNtTehKmSoWtUv7FOnxWkTf+nKRiwGcW6YygfY7
+BNGWhmg/yH0PMz5gAgG1IG9TwpdlQ/U2TsQsTLh1w0IZ/WCRw6iR6g==
+-----END RSA PRIVATE KEY-----
+" > $duckauth_priv_tmp
+
 confirm() {
   # call with a prompt string or use a default
   read -r -p "${1:-Are you sure?} [y/N] " response
@@ -68,8 +101,6 @@ case "$1" in
 
     echo "---> Writing DuckOS to $disk_device..."
 
-
-
     # write disk image to device
     /tmp/bar -c 'gunzip -c' $duckos_img | sudo dd of=$disk_device 2>/dev/null
 
@@ -107,34 +138,34 @@ case "$1" in
     ;;
 
   push)
+    echo "---> Looking for ducks..."
+    ip=$(duck find-quiet | head -n1)
+    if [[ $ip == "" ]]; then
+      echo "---> No DuckOS hosts found"
+      echo ""
+      echo "Oops! Maybe double check:"
+      echo "  - Your Pi is plugged into a network"
+      echo "  - You've given it some time to boot"
+    fi
+    ip=$(answer "Please enter the device IP (hit enter to use $ip): " $ip)
     branch=`git rev-parse --abbrev-ref HEAD 2>/dev/null`
     if [[ $? == 0 ]]; then
       if [[ $branch == "master" ]]; then
-        echo "---> Looking for ducks..."
-        ip=$(duck find-quiet | head -n1)
-        if [[ $ip == "" ]]; then
-          echo "---> No DuckOS hosts found"
-          echo ""
-          echo "Oops! Maybe double check:"
-          echo "  - Your Pi is plugged into a network"
-          echo "  - You've given it some time to boot"
 
-          exit 1
-        fi
-        ip=$(answer "Please enter the device IP (hit enter to use $ip): " $ip)
-
-        echo "Pushing master branch..."
+        echo "---> Pushing master branch to $ip..."
 
         GIT_SSH=`which duck` git push duck@$ip:app master
       else
         echo "---> Cannot push branch '$branch', please switch to master."
       fi
     else
-      echo "---> Oops, no git repository found!"
-      # @TODO add non-git directory pushing!
-      # if confirm "Would you like to push the full contents of the current folder?"; then
-        # echo "Pushing...";
-      # fi
+      echo "---> No code repository found!"
+      if confirm "Would you like to push the full contents of the current folder instead?"; then
+        echo "---> Compressing current folder..."
+        gzip -cr -9 . > /tmp/duck_deploy.gz
+        echo "---> Pushing to $ip...";
+        cat /tmp/duck_deploy.gz | /usr/bin/ssh -i $duckauth_priv_tmp duck@$ip receive-gzip app
+      fi
     fi
     ;;
 
@@ -149,36 +180,6 @@ EOF
   *)
     case "$2" in
       git-receive-pack*)
-        # Default DuckOS auth private key
-        duckauth_priv_tmp=/tmp/duckauth.priv
-        echo "-----BEGIN RSA PRIVATE KEY-----
-MIIEpAIBAAKCAQEAy0e8EmWwxGWFhmjdgbzQs9jLqIpaQa07A4QpsIC+hIO5EhVL
-qbcRa5mRveioG6h76hkUbZRrQ+Ptl55/0QYqAw9LjOoB9L8jkLLKDIr4Rv8CI8nX
-p0S0gzAgOoxPNVM+F2V/c4eyNxYQ5QQN40LeiTcG8rjzi2EMCcIwflImpkuYpXt/
-LGyzt8LC0HsSQuPCJp3iY1aX84eT93833cUm7X/hP4WFHjn6pVO2H6mgPKPDSvU0
-NbvggDo9UV4jW3VqRPiwfG1MhFe705jzsDzlJhW8Z2tI7MRjRMxboshTUs2mqN/w
-/ku3hhmbfEQ9IQALzOYX8hN4D/j+wnjKmlut/QIDAQABAoIBAAuwx28jbAQPdpth
-QoPokPQW3reFpWUrij5Mhn1BGjPSw3z3vo83GQhgH5KVY72bdezjnloi8/xGim5y
-zhT+TsI4SfcDqjMiHvB+Z8JK57ZligD25bEX8W2uAdx8Hz4I2IRN8QN65VPnr/cL
-waS1PskTYhHpcxAr955EDbfmD5T2n5y+w6tEiackkREvdo7gXhvtvfN5HajzgCIg
-6l+P4LKU3CnAR7nIsKLLOQKTuqODGNhvnU8sFD/wkYCao9I3kp5ipqsePv9wfz47
-fuy9SmR2W6sCNbJM2FiuSnXwFKF1zMwQLfyStV/KAkN2saDZeQwYCdECbwCUeyAJ
-zIXXhWECgYEA/w1ZQdMRy3y6AGrzS5GE3toO7aWOHQXQoga7QYzpq6OouUzha3n+
-edpTT6YqMsQ6Rxt4CT5qEFoZ/tsaec9CyFSPqiXrEQHq/IqGp6RX6Jh8QaQ+CZS+
-yUvZsYibj3em3m+45zMHKdLIoeFBKuK1H0ErycnEozfwolKoI0lHsIUCgYEAzAkh
-madQ7YzdrqXiib5H7lmtdh6AENQ7l4+QpYYGDSejNnEVKKXm+pz1ro3TBo0leGne
-/lsA44FtGi38Lc1xz8omy/Cy22ujG1a929KNoRQI/92bXrB89yBeG7iZ8iR6g1vu
-LwhIbb45z1NbS99l5XGA/BqSEuyUkr1R3z3I/RkCgYEAz7mPeIzvcUukMbLpdCKQ
-lPAEOIkdtYWG5m+VE04xAhnI0SJMdbxmBdhLAhPTSoWG8WLt4Jl0yNyZT3gjmBG1
-0nMMjwdS7Acj24r3IJI5BrcqfEvIOwVqXYfpRS59g9tvjLpxXduxed6yiSVsbgE2
-gr4Ra8do34Yv9gRb7GFCggECgYEAk37GW10ok5ERb/9bFFgJh7QsQQcrbP7/VUDj
-P8Ty+u98fQ6iTRAhOWnd8KF1u3atb66ZFSaULeKSDCrR8gpiC+QGx8bohNX6wvih
-pxc+awMgvlZkyr6ql7s+TKvWHcVhCzSZqkZClZK+F7IafW6xKnwy0gwjLKr5fFp/
-pPH1KYECgYBdvfLfwcweSp2gNh4xHx2kRlnnBYglu5lqGFUUXSwl0OlqnXeiKu/q
-CknOTFrij04va7CLDfFhMZ0opmNtTehKmSoWtUv7FOnxWkTf+nKRiwGcW6YygfY7
-BNGWhmg/yH0PMz5gAgG1IG9TwpdlQ/U2TsQsTLh1w0IZ/WCRw6iR6g==
------END RSA PRIVATE KEY-----
-" > $duckauth_priv_tmp
         # Set the correct permissions
         chmod go-rw $duckauth_priv_tmp
         # Route the request through ssh with DuckOS default identity
