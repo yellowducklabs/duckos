@@ -133,21 +133,19 @@ case "$1" in
     ;;
 
   push)
+    echo "---> Looking for ducks..."
+    ip=$(duck find-quiet | head -n1)
+    if [[ $ip == "" ]]; then
+      echo "---> No DuckOS hosts found"
+      echo ""
+      echo "Oops! Maybe double check:"
+      echo "  - Your Pi is plugged into a network"
+      echo "  - You've given it some time to boot"
+    fi
+    ip=$(answer "Please enter the device IP (hit enter to use $ip): " $ip)
     branch=`git rev-parse --abbrev-ref HEAD 2>/dev/null`
     if [[ $? == 0 ]]; then
       if [[ $branch == "master" ]]; then
-        echo "---> Looking for ducks..."
-        ip=$(duck find-quiet | head -n1)
-        if [[ $ip == "" ]]; then
-          echo "---> No DuckOS hosts found"
-          echo ""
-          echo "Oops! Maybe double check:"
-          echo "  - Your Pi is plugged into a network"
-          echo "  - You've given it some time to boot"
-
-          exit 1
-        fi
-        ip=$(answer "Please enter the device IP (hit enter to use $ip): " $ip)
 
         echo "---> Pushing master branch to $ip..."
 
