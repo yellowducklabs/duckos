@@ -1,7 +1,4 @@
-#########
-# Uname #
-#########
-
+# Uname
 UNAME := $(shell uname)
 
 # Standards
@@ -9,32 +6,20 @@ IBM_STD = D%Y-%m-%dT%H-%M-%S
 
 DATE  := $(shell date +$(IBM_STD))
 
-############
-# Compiler #
-############
-
-# Compiler
+### Compilers
 CC = gcc
 CPP = g++
 
 # Change this to one from the list above
 COMPILER = $(CC)
 
-##################
-# Compiler flags #
-##################
-
+# Compiler flags
 CFLAGS = -Wall
 
-###############
-# Debug flags #
-###############
-
+# Debug flags
 DEBUG = -g
 
-######################
-# Project properties #
-######################
+### Project properties
 
 # Root of the project
 BASE = .
@@ -50,10 +35,8 @@ INC_EXT = h
 OBJ_EXT = o
 BIN_EXT =
 
-##########################
-# OS Specific flags      #
-# LD Flags & Target name #
-##########################
+### OS Specific flags
+#### LD Flags & Target name
 
 # Linux (default)
 ifeq ($(UNAME),Linux)
@@ -81,10 +64,7 @@ $(BIN_EXT) = exe
 TARGET = $(PROJECT_NAME).$(BIN_EXT)
 endif
 
-############
-# Archives #
-############
-
+# Archives
 ARCHIVE_TOOL     = tar
 ARCHIVE_EXT      = tar.gz
 ARCHIVE_DIR      = archive
@@ -93,18 +73,13 @@ ARCHIVE_EXCLUDES = --exclude='*.o' --exclude='archive' --exclude='*.zip' --exclu
 ARCHIVE_SRC      = -C ../ $(PROJECT_NAME)
 ARCHIVE_NAME     = $(PROJECT_NAME).$(DATE).$(ARCHIVE_EXT)
 
-############
-# Messages #
-############
-
+# Messages
 MSG_BUILD_START = @echo [Building $(PROJECT_NAME) started.]
 MSG_BUILD_END   = @echo [Building $(PROJECT_NAME) finished.]
 
 MSG_CREATE = @echo Creating $(PROJECT_NAME) project...
 
-#########################
-# Building all together #
-#########################
+### Building all together
 
 all: $(PROJECT_NAME)
 
@@ -136,8 +111,8 @@ archive: clean
 		mkdir $(ARCHIVE_DIR); \
 	fi;)
 	$(ARCHIVE_TOOL) $(ARCHIVE_FLAGS) $(ARCHIVE_DIR)/$(ARCHIVE_NAME) $(ARCHIVE_EXCLUDES) $(ARCHIVE_SRC)
-# Additional functionality
 
+# Extra
 create:
 	$(MSG_CREATE)
 	$(shell if [ ! -d $(SRC_DIR) ]; \
