@@ -1,5 +1,5 @@
 #!/bin/sh
-set -x
+# set -x
 
 # @ISSUE This needs to be dynamic, currently hardcoded to the local build VM
 HOST=$(duck find-quiet)
@@ -26,4 +26,5 @@ ssh $args root@$HOST reboot
 echo "---> Waiting 10 seconds..."
 sleep 10
 
+echo "---> Querying with curl..."
 curl $HOST

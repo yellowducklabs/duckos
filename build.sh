@@ -29,12 +29,6 @@ SSH_AUTHORIZED_KEY='command="/usr/local/bin/ducku $SSH_ORIGINAL_COMMAND" '`cat d
 echo $SSH_AUTHORIZED_KEY >> build/home/duck/.ssh/authorized_keys
 cat duckauth.pub >> build/root/.ssh/authorized_keys
 
-# Generate new host keys
-ssh-keygen -N "" -t 'rsa' -f build/usr/local/etc/ssh/ssh_host_key
-ssh-keygen -N "" -t 'rsa' -f build/usr/local/etc/ssh/ssh_host_rsa_key
-ssh-keygen -N "" -t 'dsa' -f build/usr/local/etc/ssh/ssh_host_dsa_key
-ssh-keygen -N "" -t 'ecdsa' -f build/usr/local/etc/ssh/ssh_host_ecdsa_key
-
 # The initrd overrides we're packaging should be owned by root
 sudo chown -R 0:0 build/
 # Given we're booting with the tc user=duck bootcode, uid=1000, gid=50 (staff)
