@@ -39,11 +39,13 @@ read -r -p "Package name: " pkg_name
 echo "---> Building from ../sources/$arch/$pkg_name..."
 
 tmp=/tmp/duck-package
-dest=$tmp/usr/local/bin
+dest=$tmp/usr/local
 
 # Pack up node
 mkdir -p $dest
-cp -rp ../sources/$arch/$pkg_name $dest
+cp -rp ../sources/$arch/$pkg_name/bin $dest
+cp -rp ../sources/$arch/$pkg_name/include $dest
+cp -rp ../sources/$arch/$pkg_name/lib $dest
 
 # Fix permissions
 sudo chown -R 0:0 $tmp/
