@@ -1,11 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 
 # set -x
 
-# if [[ $(id -un) != "root" ]]; then
-#   sudo -u root -H $0 "$@"
-#   exit
-# fi
+platform='unknown'
+unamestr=`uname`
+if [[ "$unamestr" == 'Linux' ]]; then
+  platform='linux'
+elif [[ "$unamestr" == 'Darwin' ]]; then
+  platform='osx'
+fi
 
 # We need at least one argument
 if [ $# -lt 1 ]
@@ -117,8 +120,12 @@ case "$1" in
     findflag=0
     # Default quacker port
     quacker_port=10002
+
+    # Linux requires the -b flag for broadcast pings
+    opts=""; [[ $platform == 'linux' ]] && opts="-b"
+
     # Get a broadcast range
-    broadcast_range=$(ping -c2 255.255.255.255 | grep "64 bytes" | cut -d' ' -f4 | sort | uniq | cut -d':' -f1)
+    broadcast_range=$(ping $opts -c2 255.255.255.255 | grep "64 bytes" | cut -d' ' -f4 | sort | uniq | cut -d':' -f1)
     for ip in $broadcast_range;
     do
       # Get curl response
