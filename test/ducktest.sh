@@ -16,7 +16,7 @@ args="-i ../duckauth.priv -o StrictHostKeyChecking=no "
 # Manually deploy it
 cat app.tar.gz | ssh $args duck@$HOST receive-gzip app
 
-sleep 1
+sleep 2
 
 curl $HOST
 
