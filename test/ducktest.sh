@@ -1,5 +1,5 @@
 #!/bin/sh
-# set -x
+set -eo pipefail;
 
 # @ISSUE This needs to be dynamic, currently hardcoded to the local build VM
 HOST=$(duck find-quiet)

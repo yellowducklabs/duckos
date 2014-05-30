@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # @ISSUE This needs to be dynamic, currently hardcoded to the local build VM
-HOST=192.168.1.14
+HOST=$(./duck find-quiet)
 
 # Remove the host key given host keys change each build
 ssh-keygen -R $HOST
