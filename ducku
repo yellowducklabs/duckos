@@ -31,7 +31,7 @@ case "$1" in
     $DUCKU deploy $APP
     echo "---> Application deployed"
     # Backup application
-    sudo filetool.sh -b
+    $(sudo filetool.sh -b)
     echo
     ;;
 
@@ -46,7 +46,7 @@ case "$1" in
     $DUCKU deploy
     echo "---> Application deployed"
     # Backup application
-    sudo filetool.sh -b
+    $(sudo filetool.sh -b)
     ;;
 
   build)
