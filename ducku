@@ -22,14 +22,20 @@ git_archive_all() {
   rm -rf $TMP_WORK_DIR > /dev/null
 }
 
+detect_lang() {
+  if [ -f $1/app.js ]; then
+    echo "nodejs"
+  else
+    echo ""
+  fi
+}
+
 case "$1" in
   receive)
     APP="$2"
     echo "---> Building $APP ..."
     cat | $DUCKU build $APP
-    echo "---> "$(sudo filetool.sh -b)
-    $DUCKU deploy $APP
-    echo "---> Application deployed"
+    $DUCKU execute
     echo
     ;;
 
@@ -41,22 +47,40 @@ case "$1" in
     mkdir -p $DUCKU_ROOT/run
     tar -xf $DUCKU_ROOT/app.tar.gz -C $DUCKU_ROOT/run
     rm $DUCKU_ROOT/app.tar.gz
-    echo "---> "$(sudo filetool.sh -b)
-    $DUCKU deploy
-    echo "---> Application deployed"
+    $DUCKU execute
     ;;
 
   build)
     APP="$2"
     DUCKU_RUN=$DUCKU_ROOT/run
     rm -rf $DUCKU_RUN && mkdir $DUCKU_RUN
-    cat | tar -xC $DUCKU_ROOT/run
+    cat | tar -xC $DUCKU_RUN
     ;;
 
-  deploy)
+  execute)
+    lang=$(detect_lang $DUCKU_ROOT/run)
+    if [ $lang ]; then
+      echo "---> $lang app detected"
+      echo "---> "$(sudo filetool.sh -b)
+      $DUCKU execute-$lang
+      echo "---> Application deployed"
+    else
+      echo "---> Oops! No supported app detected..."
+      echo "---> Please ensure you have the following for your chosen language:"
+      echo "---> - Node.js: app.js"
+      echo "---> - Custom: execute.sh"
+    fi
+    ;;
+
+  execute-nodejs)
     [[ `pidof node` ]] && sudo killall node
     # Node binds both input/output which hangs the deploy unless we redirect output/input
     sudo nohup node $DUCKU_ROOT/run/app.js >$DUCKU_ROOT/run.log 2>&1 </dev/null &
+    ;;
+
+  execute-custom)
+    [[ `pidof execute.sh` ]] && sudo killall execute
+    sudo nohup $DUCKU_ROOT/run/execute.sh >$DUCKU_ROOT/run.log 2>&1 </dev/null &
     ;;
 
   shell)

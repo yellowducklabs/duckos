@@ -16,4 +16,4 @@ sysctl -w net.ipv4.icmp_echo_ignore_broadcasts=0 2>&1 > /dev/null
 /usr/local/bin/quacker 10002 &
 
 # Add app deployment to .ashrc
-echo "ducku deploy app" >> /home/duck/.ashrc
+echo "ducku execute >/dev/null" >> /home/duck/.ashrc
