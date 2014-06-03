@@ -7,8 +7,10 @@ HOST=$(duck find-quiet)
 # Remove the host key given host keys change each build
 ssh-keygen -R $HOST
 
+read -r -p "Choose lang (nodejs/python/ruby): " lang
+
 # Package our test app
-tar czvf app.tar.gz -C app/ .
+tar czvf app.tar.gz -C app-$lang/ .
 
 # Use private key and skip host checking as keys change each build
 args="-i ../duckauth.priv -o StrictHostKeyChecking=no "
