@@ -51,7 +51,7 @@ assert_lang() {
 case "$1" in
   receive)
     APP="$2"
-    echo "---> Building $APP ..."
+    echo "---> Building $APP..."
     cat | $DUCKU build $APP
     $DUCKU execute
     echo
@@ -59,9 +59,9 @@ case "$1" in
 
   receive-gzip)
     APP="$2"
-    echo "---> Receiving $APP ..."
+    echo "---> Receiving $APP..."
     cat > $DUCKU_ROOT/app.tar.gz
-    echo "---> Building $APP ..."
+    echo "---> Building $APP..."
     DUCKU_RUN=$DUCKU_ROOT/run
     rm -rf $DUCKU_RUN && mkdir $DUCKU_RUN
     tar -xf $DUCKU_ROOT/app.tar.gz -C $DUCKU_RUN
@@ -79,18 +79,18 @@ case "$1" in
   execute)
     lang=$(detect_lang $DUCKU_ROOT/run)
     if [ $lang ]; then
-      echo "---> $lang app detected"
+      echo "---> $lang app detected..."
       assert_lang $lang
       echo "---> "$(sudo filetool.sh -b)
       $DUCKU execute-$lang
       echo "---> Application deployed"
     else
       echo "---> Oops! No supported app detected..."
-      echo "---> Please ensure you have the following for your chosen language:"
-      echo "---> - Node.js: app.js"
-      echo "---> - Python: app.py"
-      echo "---> - Ruby: app.rb"
-      echo "---> - Custom: execute.sh"
+      echo "---> Please ensure an appropriate file is present:"
+      echo "---> - Node.js needs an 'app.js'"
+      echo "---> - Python needs an 'app.py'"
+      echo "---> - Ruby needs an 'app.rb'"
+      echo "---> Or, add 'execute.sh' to run something custom."
     fi
     ;;
 
