@@ -25,6 +25,8 @@ git_archive_all() {
 detect_lang() {
   if [ -f $1/app.js ]; then
     echo "nodejs"
+  elif [ -f $1/app.rb ]; then
+    echo "ruby"
   else
     echo ""
   fi
@@ -34,6 +36,9 @@ assert_lang() {
   case "$1" in
     nodejs)
       echo "--->" $(tce-load -wi nodejs)
+    ;;
+    ruby)
+      echo "--->" $(tce-load -wi ruby-2.1)
     ;;
   esac
 }
@@ -52,8 +57,9 @@ case "$1" in
     echo "---> Receiving $APP ..."
     cat > $DUCKU_ROOT/app.tar.gz
     echo "---> Building $APP ..."
-    mkdir -p $DUCKU_ROOT/run
-    tar -xf $DUCKU_ROOT/app.tar.gz -C $DUCKU_ROOT/run
+    DUCKU_RUN=$DUCKU_ROOT/run
+    rm -rf $DUCKU_RUN && mkdir $DUCKU_RUN
+    tar -xf $DUCKU_ROOT/app.tar.gz -C $DUCKU_RUN
     rm $DUCKU_ROOT/app.tar.gz
     $DUCKU execute
     ;;
@@ -85,6 +91,11 @@ case "$1" in
     [[ `pidof node` ]] && sudo killall node
     # Node binds both input/output which hangs the deploy unless we redirect output/input
     sudo nohup node $DUCKU_ROOT/run/app.js >$DUCKU_ROOT/run.log 2>&1 </dev/null &
+    ;;
+
+  execute-ruby)
+    [[ `pidof ruby` ]] && sudo killall ruby
+    sudo nohup ruby $DUCKU_ROOT/run/app.rb >$DUCKU_ROOT/run.log 2>&1 </dev/null &
     ;;
 
   execute-custom)
