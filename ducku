@@ -30,6 +30,14 @@ detect_lang() {
   fi
 }
 
+assert_lang() {
+  case "$1" in
+    nodejs)
+      echo "--->" $(tce-load -wi nodejs)
+    ;;
+  esac
+}
+
 case "$1" in
   receive)
     APP="$2"
@@ -61,6 +69,7 @@ case "$1" in
     lang=$(detect_lang $DUCKU_ROOT/run)
     if [ $lang ]; then
       echo "---> $lang app detected"
+      assert_lang $lang
       echo "---> "$(sudo filetool.sh -b)
       $DUCKU execute-$lang
       echo "---> Application deployed"
