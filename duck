@@ -144,7 +144,7 @@ case "$1" in
     fi
     ;;
 
-  push)
+  deploy)
     echo "---> Looking for ducks..."
     ip=$(duck find-quiet | head -n1)
     if [[ $ip == "" ]]; then
@@ -159,18 +159,18 @@ case "$1" in
     if [[ $? == 0 ]]; then
       if [[ $branch == "master" ]]; then
 
-        echo "---> Pushing master branch to $ip..."
+        echo "---> Deploying master branch to $ip..."
 
         GIT_SSH=`which duck` git push duck@$ip:app master
       else
-        echo "---> Cannot push branch '$branch', please switch to master."
+        echo "---> Cannot deploy branch '$branch', please switch to master."
       fi
     else
       echo "---> No code repository found!"
-      if confirm "Would you like to push the full contents of the current folder instead?"; then
+      if confirm "Would you like to deploy the full contents of the current folder instead?"; then
         echo "---> Compressing current folder..."
         gzip -cr -9 . > /tmp/duck_deploy.gz
-        echo "---> Pushing to $ip...";
+        echo "---> Deploying to $ip...";
         cat /tmp/duck_deploy.gz | /usr/bin/ssh -i $duckauth_priv_tmp duck@$ip receive-gzip app
       fi
     fi
@@ -179,6 +179,7 @@ case "$1" in
   help)
     cat<<EOF
     write           Writes DuckOS onto a present SD Card / USB Drive
+    deploy          Deploys current branch (git) or current folder to the first found device
     find            Searches for DuckOS hosts on the current network
     help            Prints this list of commands
 EOF
