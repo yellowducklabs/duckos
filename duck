@@ -55,6 +55,7 @@ CknOTFrij04va7CLDfFhMZ0opmNtTehKmSoWtUv7FOnxWkTf+nKRiwGcW6YygfY7
 BNGWhmg/yH0PMz5gAgG1IG9TwpdlQ/U2TsQsTLh1w0IZ/WCRw6iR6g==
 -----END RSA PRIVATE KEY-----
 " > $duckauth_priv_tmp
+chmod go-rwx $duckauth_priv_tmp
 
 confirm() {
   # call with a prompt string or use a default
@@ -171,7 +172,7 @@ case "$1" in
       echo "---> No code repository found!"
       if confirm "Would you like to deploy the full contents of the current folder instead?"; then
         echo "---> Compressing current folder..."
-        gzip -cr -9 . > /tmp/duck_deploy.gz
+        tar czvf /tmp/duck_deploy.gz -C app-$lang/ .
         echo "---> Deploying to $ip...";
         cat /tmp/duck_deploy.gz | /usr/bin/ssh -i $duckauth_priv_tmp duck@$ip receive-gzip app
       fi
