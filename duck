@@ -91,6 +91,14 @@ case "$1" in
         curl $duckos_latest -o $duckos_img
     fi
 
+    # Check for platform and list all devices
+    if [[ $platform == 'osx' ]]; then
+      echo -e "\nDisk devices available:"
+      echo "-----------------------"
+      diskutil list
+      echo ""
+    fi
+
     read -r -p "Select disk device (all data will be lost!): " disk_device
 
     # ensure our device is unmounted
