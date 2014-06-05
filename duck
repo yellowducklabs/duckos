@@ -180,7 +180,7 @@ case "$1" in
       echo "---> No code repository found!"
       if confirm "Would you like to deploy the full contents of the current folder instead?"; then
         echo "---> Compressing current folder..."
-        tar czvf /tmp/duck_deploy.gz -C app-$lang/ .
+        tar czvf /tmp/duck_deploy.gz .
         echo "---> Deploying to $ip...";
         cat /tmp/duck_deploy.gz | /usr/bin/ssh -i $duckauth_priv_tmp duck@$ip receive-gzip app
       fi
