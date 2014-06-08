@@ -38,6 +38,10 @@ assert_lang() {
   case "$1" in
     nodejs)
       echo "--->" $(tce-load -wi nodejs)
+      # Check if package.json exists and run npm install
+      if [ -f $DUCKU_RUN/package.json ]; then
+        echo "--->" $(npm install $DUCKU_RUN)
+      fi
     ;;
     python)
       echo "--->" $(tce-load -wi python)
