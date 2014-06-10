@@ -204,6 +204,11 @@ EOF
         # Route the request through ssh with DuckOS default identity
         /usr/bin/ssh -i $duckauth_priv_tmp $@
         ;;
+      *)
+        echo "duck: illegal option '$1'"
+        echo ""
+        duck help
+        ;;
       esac
     ;;
 
