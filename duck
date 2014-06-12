@@ -16,7 +16,7 @@ if [ $# -lt 1 ]
   exit 1
 fi
 
-duckos_filename="duckos-rpi-0.2.img.gz"
+duckos_filename="duckos-rpi-0.3.img.gz"
 duckos_latest="http://releases.duckos.io/$duckos_filename"
 
 duck_tmp="$HOME/.duck"
