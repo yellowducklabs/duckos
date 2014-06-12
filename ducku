@@ -39,8 +39,8 @@ assert_lang() {
     nodejs)
       echo "--->" $(tce-load -wi nodejs)
       # Check if package.json exists and run npm install
-      if [ -f $DUCKU_RUN/package.json ]; then
-        echo "--->" $(npm install $DUCKU_RUN)
+      if [ -f $DUCKU_ROOT/run/package.json ]; then
+        echo "--->" $(npm install --prefix $DUCKU_ROOT/run)
       fi
     ;;
     python)
