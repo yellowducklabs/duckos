@@ -16,8 +16,9 @@ Write
 Insert an SD card on host and run `duck write`
 
 ```
----> Downloading latest DuckOS...
-Select disk device (data will be destroyed): /dev/disk2
+---> Downloading duck source...
+---> Installed duck! Try running 'duck' for commands.
+Select disk device (all data will be lost!): /dev/disk2
 ---> Writing DuckOS to /dev/disk2...
 ---> DuckOS install complete!
 ```
@@ -26,7 +27,7 @@ Deploy
 --------
 Insert SD into Pi, connect network cable and turn on.
 
-After a few seconds, run `duck push` in your git project folder
+After a few seconds, run `duck deploy` in your git project folder
 ```
 ---> Looking for ducks...
 Please enter the device IP (hit enter to use 11.22.33.44):
