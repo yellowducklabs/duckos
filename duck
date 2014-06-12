@@ -196,6 +196,11 @@ case "$1" in
 EOF
     ;;
 
+  ssh)
+    ip=$(duck find-quiet | head -n1)
+    ssh -i $duckauth_priv_tmp root@$ip
+    ;;
+
   *)
     case "$2" in
       git-receive-pack*)
