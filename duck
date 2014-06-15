@@ -87,8 +87,8 @@ case "$1" in
     # Ensure we have a copy of duckos
     if [[ -f $duckos_img ]]
       then echo "---> Using $duckos_img"
-      else echo "---> Downloading latest DuckOS..."
-        curl $duckos_latest -o $duckos_img
+    else echo "---> Downloading latest DuckOS..."
+      curl $duckos_latest -o $duckos_img
     fi
 
     # Check for platform and list all devices
