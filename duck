@@ -101,6 +101,17 @@ case "$1" in
 
     read -r -p "Select disk device (all data will be lost!): " disk_device
 
+    # Check if the device specified is a block device
+    # otherwise - print help and exit
+    if [ ! -b "$disk_device" ]
+    then
+      echo "---> No device found"
+      echo "Oops! Maybe double check:"
+      echo "  - Your storage device is connected"
+      echo "  - You've given the correct device name"
+      exit 1
+    fi
+
     # ensure our device is unmounted
     for filesystem in `ls -1 $disk_device?*`; do
         sudo -p "Sudo password: " umount -f $filesystem 2>/dev/null
