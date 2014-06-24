@@ -189,7 +189,7 @@ case "$1" in
       fi
     else
       echo "---> No code repository found!"
-      if confirm "Would you like to deploy the full contents of the current folder instead?"; then
+      if confirm "Deploy the full contents of the current folder instead?"; then
         echo "---> Compressing current folder..."
         tar czvf /tmp/duck_deploy.gz .
         echo "---> Deploying to $ip...";
