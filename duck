@@ -198,18 +198,33 @@ case "$1" in
     fi
     ;;
 
-  help)
-    cat<<EOF
-    write           Writes DuckOS onto a present SD Card / USB Drive
-    deploy          Deploys current branch (git) or current folder to the first found device
-    find            Searches for DuckOS hosts on the current network
-    help            Prints this list of commands
-EOF
+  config)
+      case "$2" in
+        wifi)
+          ip=$(duck find-quiet | head -n1)
+          ssh -i $duckauth_priv_tmp root@$ip config-wifi
+          ;;
+        *)
+          duck help
+          ;;
+      esac
     ;;
 
   ssh)
     ip=$(duck find-quiet | head -n1)
     ssh -i $duckauth_priv_tmp root@$ip
+    ;;
+
+  help)
+    cat<<EOF
+    write           Writes DuckOS onto a present SD Card / USB Drive
+    deploy          Deploys current branch (git) or current folder to the first found device
+    find            Searches for DuckOS hosts on the current network
+    config          Configure a DuckOS host
+      wifi            Get DuckOS to search for and join a wifi network
+    ssh             Shell into DuckOS
+    help            Prints this list of commands
+EOF
     ;;
 
   *)

@@ -123,6 +123,11 @@ case "$1" in
     /bin/bash
     ;;
 
+  config-wifi)
+    #@STUB need to ensure the wifi package is already installed via tce
+    sudo wifi.sh
+    ;;
+
   git-hook)
     APP="$2"
 
