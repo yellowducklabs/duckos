@@ -124,7 +124,8 @@ case "$1" in
     ;;
 
   config-wifi)
-    #@STUB need to ensure the wifi package is already installed via tce
+    # Ensure wifi package is installed
+    echo "--->" $(tce-load -wi wifi)
     sudo wifi.sh
     ;;
 

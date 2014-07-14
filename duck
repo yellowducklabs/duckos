@@ -202,7 +202,7 @@ case "$1" in
       case "$2" in
         wifi)
           ip=$(duck find-quiet | head -n1)
-          ssh -i $duckauth_priv_tmp root@$ip config-wifi
+          /usr/bin/ssh -t -i $duckauth_priv_tmp duck@$ip config-wifi
           ;;
         *)
           duck help
