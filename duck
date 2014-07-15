@@ -198,16 +198,9 @@ case "$1" in
     fi
     ;;
 
-  config)
-      case "$2" in
-        wifi)
-          ip=$(duck find-quiet | head -n1)
-          /usr/bin/ssh -t -i $duckauth_priv_tmp duck@$ip config-wifi
-          ;;
-        *)
-          duck help
-          ;;
-      esac
+  config-wifi)
+    ip=$(duck find-quiet | head -n1)
+    /usr/bin/ssh -t -i $duckauth_priv_tmp duck@$ip config-wifi
     ;;
 
   ssh)
@@ -220,9 +213,8 @@ case "$1" in
     write           Writes DuckOS onto a present SD Card / USB Drive
     deploy          Deploys current branch (git) or current folder to the first found device
     find            Searches for DuckOS hosts on the current network
-    config          Configure a DuckOS host
-      wifi            Get DuckOS to search for and join a wifi network
-    ssh             Shell into DuckOS
+    config-wifi     Configure wifi network on a DuckOS host
+    ssh             Shell into a DuckOS host
     help            Prints this list of commands
 EOF
     ;;
