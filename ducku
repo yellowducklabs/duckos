@@ -126,6 +126,7 @@ case "$1" in
   config-wifi)
     # Ensure wifi package is installed
     echo "--->" $(tce-load -wi wifi)
+    export PATH=/usr/local/sbin:/usr/local/bin:"$PATH"
     sudo wifi.sh
     ;;
 
