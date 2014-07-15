@@ -123,6 +123,14 @@ case "$1" in
     /bin/bash
     ;;
 
+  config-wifi)
+    # Ensure wifi package is installed
+    echo "--->" $(tce-load -wi wifi)
+    export PATH=/usr/local/sbin:/usr/local/bin:"$PATH"
+    sudo wifi.sh
+    echo "---> "$(sudo filetool.sh -b)
+    ;;
+
   git-hook)
     APP="$2"
 
