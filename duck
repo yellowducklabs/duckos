@@ -203,9 +203,29 @@ case "$1" in
     /usr/bin/ssh -t -i $duckauth_priv_tmp duck@$ip config-wifi
     ;;
 
+  config-ssh)
+    doconfig=true
+    # check if user wants to use local .ssh/id_rsa.pub if it exists
+    if confirm "Use ~/.ssh/id_rsa.pub for authentication?"; then
+      doconfig=false
+    else
+      # otherwise, generate SSH key
+      if confirm "Generate SSH keys for authentication?"; then
+        ssh-keygen
+      else
+        doconfig=false
+      fi
+    fi
+    if [[ doconfig ]]; then
+      ip=$(duck find-quiet | head -n1)
+      # run config-key on ducku with public key data
+      cat ~/.ssh/id_rsa.pub | ssh -i $duckauth_priv_tmp duck@$ip config-ssh
+    fi
+    ;;
+
   ssh)
     ip=$(duck find-quiet | head -n1)
-    ssh -i $duckauth_priv_tmp root@$ip
+    ssh -i $duckauth_priv_tmp duck@$ip
     ;;
 
   help)
@@ -214,6 +234,7 @@ case "$1" in
     deploy          Deploys current branch (git) or current folder to the first found device
     find            Searches for DuckOS hosts on the current network
     config-wifi     Configure wifi network on a DuckOS host
+    config-key      Configure SSH public key for DuckOS host
     ssh             Shell into a DuckOS host
     help            Prints this list of commands
 EOF

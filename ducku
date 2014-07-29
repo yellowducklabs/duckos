@@ -131,6 +131,14 @@ case "$1" in
     echo "---> "$(sudo filetool.sh -b)
     ;;
 
+  config-ssh)
+    echo "---> Replacing remote authorized key"
+    authkeys=$DUCKU_ROOT/.ssh/authorized_keys
+    key="command=\"/usr/local/bin/ducku \$SSH_ORIGINAL_COMMAND\" "`cat`
+    echo $key > $authkeys
+    echo "---> "$(sudo filetool.sh -b)
+    ;;
+
   git-hook)
     APP="$2"
 
@@ -174,5 +182,11 @@ EOF
 
   help)
     cat
+    ;;
+
+  *)
+    # If no commands matched, drop a shell
+    cat /etc/motd
+    sh --login
     ;;
 esac

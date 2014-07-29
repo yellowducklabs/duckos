@@ -24,10 +24,9 @@ mkdir -p build/home/duck/duck
 cp duck build/home/duck/duck/
 cp ducku build/home/duck/duck/
 
-# Set up the default SSH keys for root and duck
+# Set up the default SSH keys for duck
 SSH_AUTHORIZED_KEY='command="/usr/local/bin/ducku $SSH_ORIGINAL_COMMAND" '`cat duckauth.pub`
 echo $SSH_AUTHORIZED_KEY >> build/home/duck/.ssh/authorized_keys
-cat duckauth.pub >> build/root/.ssh/authorized_keys
 
 # The initrd overrides we're packaging should be owned by root
 sudo chown -R 0:0 build/
