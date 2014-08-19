@@ -2,7 +2,7 @@ package main
 
 import  (
   "fmt"
-  "net"
+  "net/http"
   "strings"
   "io/ioutil"
   "crypto/md5"
@@ -16,17 +16,16 @@ type DuckStats struct {
 }
 
 func main() {
-  // Open up a socket and listen on tcp/8080
-  ln, err := net.Listen("tcp", ":8080")
-  if err != nil { /* Handle error */ }
+  http.HandleFunc("/", responseHandler)
+  http.ListenAndServe(":10002", nil)
+}
 
-  // Listen for connections
-  for {
-    conn, err := ln.Accept()
-    if err != nil { /* Handle error continue */ }
-    go handleRequest(conn)
+func responseHandler(w http.ResponseWriter, r *http.Request) {
+  response := "insecure"
+  if isKeySecure() {
+    response = "secure"
   }
-
+  fmt.Fprintf(w, "%s", response)
 }
 
 func prepareResponse() []byte {
@@ -36,15 +35,6 @@ func prepareResponse() []byte {
   // Response for the request
   fmt.Println(string(bMessage))
   return bMessage
-}
-
-func handleRequest(conn net.Conn) {
-  response := "insecure"
-  if isKeySecure() {
-    response = "secure"
-  }
-  conn.Write([]byte(response))
-  conn.Close()
 }
 
 // Duck stats routines
