@@ -154,10 +154,17 @@ case "$1" in
       response=$(curl -m1 --connect-timeout 2 $ip:$quacker_port 2>&1)
       response_code=$?
       case $response_code in
-        56|52)
-            findflag=1
-            [[ $verbose ]] && prefix="Quack! DuckOS detected on IP: "
-            echo $prefix$ip
+        0)
+          findflag=1
+          [[ $verbose ]] && prefix="Quack! DuckOS detected on IP: "
+          echo $prefix$ip
+          if [[ $response != 'secure' ]]; then
+            echo ""
+            echo "========================================"
+            echo "WARNING: Your DuckOS host is not secure! "
+            echo "Run \`duck config-ssh\` to set an SSH key"
+            echo "========================================"
+          fi
         ;;
       esac
     done
