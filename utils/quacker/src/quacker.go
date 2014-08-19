@@ -16,8 +16,8 @@ type DuckStats struct {
 }
 
 func main() {
-  // Open up a socket and listen on tcp/8080
-  ln, err := net.Listen("tcp", ":8080")
+  // Open up a socket and listen on tcp/10002
+  ln, err := net.Listen("tcp", ":10002")
   if err != nil { /* Handle error */ }
 
   // Listen for connections
