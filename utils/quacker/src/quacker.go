@@ -1,6 +1,7 @@
 package main
 
 import  (
+  "os"
   "fmt"
   "net/http"
   "strings"
@@ -16,8 +17,9 @@ type DuckStats struct {
 }
 
 func main() {
+  portNumber := os.Args[1]
   http.HandleFunc("/", responseHandler)
-  http.ListenAndServe(":10002", nil)
+  http.ListenAndServe(":" + portNumber, nil)
 }
 
 func responseHandler(w http.ResponseWriter, r *http.Request) {
@@ -59,7 +61,6 @@ func getOsVersion() string {
   if err != nil { return "Unknown" }
   return strings.TrimSpace(string(b))
 }
-
 
 // Utility functions
 func md5Hash(text []byte) string {
